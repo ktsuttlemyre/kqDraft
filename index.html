@@ -57,10 +57,14 @@
 	</script>
 <style type="text/css">
 
-	
+.draggable{
+	position: relative;
+}
 .draggable:after{
 	content: '::';
-	float:left;
+	position: absolute;
+	top:.25em;
+	left:.25em;
 	/*text-shadow: 0px 1px 1px #4d4d4d;*/
 	text-shadow: -1px -1px 1px #fff, 1px 1px 1px #000;
 	opacity: 0.3;
@@ -147,6 +151,7 @@
 	}
 </style>
 <style>
+
 	#everyone .remove-show .remove{
 		display: inline-block;
 	}
@@ -170,7 +175,7 @@
 		background: white;
 		border-radius: 1em;
 		text-align: center;
-		margin: 0;padding: 0 0 0 8%;
+		margin: 0;padding: 0 0 0 0;
 	}
 	.draftPool:before{
 		content: 'Draft';
@@ -489,9 +494,9 @@
 		overflow: auto;
 		position: absolute;
 		top: 3em;
-		bottom: 0;
-		left: 0;
-		right: 0;
+		bottom: .5em;
+		left: .5em;
+		right: .5em;
 	}
 	.slick-current ~ .slick-slide .team-viewport{
 		left:.5em;
@@ -606,8 +611,14 @@
 		.queen:before,.teams .drone:before{
 			display: block;
 		}
+		.team{
+			padding:.5em 0;
+		}
 		.team-viewport{
 			top:3.5em;
+			bottom: 0;
+			left: 0;
+			right: 0;
 		}
 		.teams{
 			top:0;
@@ -615,7 +626,7 @@
 			right: 1em;
 			bottom: 1em;
 		}
-		.blueTeam, .goldTeam{
+		.slick-current ~ .slick-slide .team{
 			padding: .5em;
 		}
 		.bout-label{
@@ -646,6 +657,9 @@
 			width:48%;
 			float:left;
 		}
+		#everyone{
+			display: inline-block;
+		}
 	}
 	@media(min-width:768px){/*small*/
 		.slick-slide{
@@ -654,6 +668,9 @@
 		.player{
 			width:32%;
 			float:left;
+		}
+		.team{
+			padding:.5em;
 		}
 
 	}
@@ -689,12 +706,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="#">&#x1F347;&nbsp;KQDraft</a>
-    </div>
-
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" style='display: inline-block;'>
         <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
         <li><a href="#">Link</a></li>-->
         <li class="dropdown">
@@ -709,6 +721,12 @@
           </ul>
         </li>
       </ul>
+    </div>
+
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
 		<form id='addUser' class="navbar-form navbar-right" style='background: transparent; position: relative;overflow: hidden;'>
 			<div class="input-group">
 				<div id='optimizationTech' class="btn-group " data-toggle="buttons">
