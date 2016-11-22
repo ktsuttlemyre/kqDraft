@@ -1,0 +1,729 @@
+<html lang="en">
+<head>
+	<!--////////////////////////
+	           humans.txt   
+
+	/* TEAM */
+		Developer: Kyle Suttlemyre
+		Twitter: @Ktsuttle
+
+	/* THANKS */
+		jQuery - https://jquery.com/
+		Bootstrap - http://getbootstrap.com/
+		Random.js - https://github.com/ckknight/random-js
+		slick (carousel) - http://kenwheeler.github.io/slick/
+		Sortable - https://github.com/RubaXa/Sortable
+		Lodash - https://lodash.com/
+		weighted - https://github.com/Schoonology/weighted
+
+	            humans.txt     
+	////////////////////////-->
+
+
+
+
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+	 <!-- Remove Tap Highlight on Windows Phone IE -->
+	<meta name="msapplication-tap-highlight" content="no"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Language" content="en">
+	<!--jquery-->
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<!--bootstrap-->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src='https://cdn.rawgit.com/ckknight/random-js/master/lib/random.min.js'></script>
+
+	<!--slick carousel-->
+	<link rel="stylesheet" type="text/css" href="//cdn.rawgit.com/kenwheeler/slick/master/slick/slick.css"/>
+	<link rel="stylesheet" type='text/css' href='//cdn.rawgit.com/kenwheeler/slick/master/slick/slick-theme.css'>
+	<script type="text/javascript" src="//cdn.rawgit.com/kenwheeler/slick/master/slick/slick.min.js"></script>
+
+	<!--drag n drop sortable-->
+	<script type="text/javascript" src='https://cdn.rawgit.com/RubaXa/Sortable/master/Sortable.min.js'></script>
+
+	<!--lodash-->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js'></script>
+
+	<!--weighted random-->
+	<script type="text/javascript">
+		window.module={}
+	</script>
+	<script type="text/javascript" src='https://cdn.rawgit.com/Schoonology/weighted/master/lib/weighted.js'></script>
+	<!--<script src='https://cdn.rawgit.com/parmentf/random-weighted-choice/master/src/random-weighted-choice.js'></script>-->
+	<script type="text/javascript">
+		window.rwc=module.exports
+	</script>
+
+
+
+<style type="text/css">
+/*http://stackoverflow.com/questions/22390272/label-with-close-icon-in-bootstrap*/
+	.tag {
+		display: inline;
+		text-align: center;
+		white-space: nowrap;
+		border-radius: .25em;
+
+		padding: .5em;
+		margin: .25em;
+	}
+	.tag a {
+		float: right;
+		color: #bbb;
+		cursor: pointer;
+		opacity: 0.6;
+	}
+	.tag a:hover {
+		opacity: 1.0
+	}
+	.tag .remove {
+		vertical-align: bottom;
+		top: 0;
+	}
+	.tag a {
+		margin: 0 0 0 .3em;
+	}
+	.tag a .glyphicon-white {
+		color: #fff;
+		margin-bottom: 2px;
+	}
+</style>
+<style>
+	#everyone .remove-show .remove{
+		display: inline-block;
+	}
+	#everyone .remove-hide .remove{
+		display: none;
+	}
+	#everyone{
+		padding: 0em 1em 1em .5em;
+		text-align: center;
+		background-color: #DED;
+		border-radius: 2em;
+	}
+	#everyone:before{
+		content: 'Active';
+		display: block;
+		margin: 0 auto;
+		font-size:1.5em;
+		text-align: center;
+	}
+	.draftPool{
+		background: white;
+		border-radius: 1em;
+		text-align: center;
+		margin: 0;padding: 0 0 0 8%;
+	}
+	.draftPool:before{
+		content: 'Draft';
+		font-size:1em;
+		display: block;
+		position: relative;
+		left: -4%;
+		width: 100%;
+		text-align: center;
+		font-weight: bold;
+		border-bottom: thin dotted #CCC;
+		margin:.5em 0 0 0;
+	}
+	/*.draftPool:empty {
+		background: transparent;
+		display: none;
+	}*/
+
+	.blueTeam, .goldTeam{
+		padding: .5em 0;
+		font-weight: bold;
+		text-align: center;
+		border-radius: 1em 0 0 1em;
+	}
+
+	.blueTeam{
+		background: mediumblue;
+	}
+	.blueTeam + .goldTeam{
+		border-radius: 0 1em 1em 0;
+	}
+	.blueTeam:before{
+		content: 'Blue';
+		font-size:1.1em;
+		font-weight: bold;
+		color:white;
+	}
+
+	.goldTeam{
+		background: gold;
+	}
+	.goldTeam:before{
+		content: 'Gold';
+		font-size:1.1em;
+		font-weight: bold;
+	}
+	.goldTeam + .blueTeam{
+		border-radius: 0 1em 1em 0;
+	}
+
+	.queen{
+		background: #000;
+		display: block;
+	}
+	.queen:before{
+		display: none;
+		content:"\1F451";
+		float:left;
+	}
+	.drone{
+		background: #CCC;
+		color:black;
+		overflow: hidden;
+		/*width: 25%;*/
+	}
+	.teams .drone{
+		display: block;
+		float: none;
+		width: auto;
+	}
+	
+	.teams .drone:before{
+		display: none;
+		content: "\1F41D";
+		float:left;
+	}
+
+	.goldTeam .drone{
+		background: maroon;
+		color: white;
+		/*width: 50%;*/
+	}
+	.goldTeam .queen{
+		background: orangered
+	}
+	.blueTeam .drone{
+		background: dodgerblue;
+		/*width: 50%;*/
+	}
+	.blueTeam .queen{
+		background: teal;
+	}
+	.place-holder{
+		outline: 3px dotted black;
+		display:block;
+		color:white;
+	}
+	#trash .place-holder{
+		position: absolute;
+		top:0;left:0;right:0;bottom:0;
+		width: 100%;height:100%;
+		z-index: 99999;
+	}
+	#trash .place-holder:before{
+		position: absolute;
+		top:-100%;
+		left: 0;
+		content: 'Sign Off';
+		display: block;
+		margin: 0 auto;
+		font-size:1em;
+		text-align: center;
+		color: black;
+	}
+	#everyone-list .place-holder{
+		position: absolute;
+		top:0;left:0;right:0;bottom:0;
+		width: 100%;height:100%;
+		z-index: 99999;
+	}
+	#everyone-list .place-holder:before{
+		content: 'Undraft';
+		display: block;
+		line-height: 15em;
+		margin: 0 auto;
+		font-size:1.5em;
+		text-align: center;
+		color: white;
+	}
+
+	.white-out{
+		background: white;
+		color:white;
+	}
+	.blueTeam .place-holder{
+		outline-color: lightskyblue;
+		/*background: #0099dd*/
+	}
+	.goldTeam .place-holder{
+		outline-color: orangered;
+	}
+/*	.draft-row{
+		overflow: auto;
+	}
+	.slick-slider{
+		width: 300%;
+	}*/
+ 	.proxy-arrow-next{
+ 		display: block;
+ 		right: 1em;
+ 	}
+ 	.proxy-arrow-prev{
+ 		display: block;
+ 		left: 1em;
+ 	}
+	/*make teams take up all height when they are not in draft mode*/
+	.teams{
+		position: absolute;
+		top: 0;
+		bottom: 0em;
+		left: 0em;
+		right: 0em;
+	}
+	.teams .queen{
+				color: white;
+	}
+	.slick-slide .blueTeam,.slick-slide .goldTeam{
+		height: 100%;
+	}
+	.slick-slide .draftPool{
+		display: none;
+	}
+	/*@media only screen and (max-width : 979px) {
+		.slick-current{
+			transform-origin: left center;
+			transform:translateX(-100%) scale(2,1) !important;
+			/*left:100% !important;*/
+			/*width:10% !important;*/
+		/*}
+	}*/
+
+
+	/*reset settings from above to allow draft*/
+	.slick-current ~ .slick-slide .teams{
+		position: static;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+	.slick-current ~ .slick-slide .blueTeam,.slick-current ~ .slick-slide .goldTeam{
+		height: auto;
+	}
+	.slick-current ~ .slick-slide .draftPool{
+		display: block;
+	}
+
+	.player{
+		display: block;
+		background: white;
+		border-radius: 1em;
+		padding: .3em .5em;
+		margin: .2em;
+		position: relative;
+		width: 100%;
+		float: none;
+		max-width: 400px;
+	}
+	.metric{
+		position: relative;
+		z-index:1;
+		float: right;
+		margin:0em .4em;
+	}
+	.metric:before{
+		position: absolute;
+		right:0;
+		z-index:-1;
+	}
+
+	.player .weight:before{
+		content: "\1F340";
+	}
+
+	.player .wins:before{
+		/*content:"🌟";*/
+	}
+
+
+
+	.player .name{
+	
+	}
+	
+
+</style>
+
+<style type="text/css">
+.select-multiple-horizontal{
+	padding:0 .5em;
+}
+.select-multiple-horizontal option {
+	height:100%;
+	width:auto;
+	padding:.25em .5em;
+	display:inline-block;
+	float: left;
+	
+}
+.select-multiple-horizontal option:not(:first-child){
+	border-left:1px solid #CCC;
+}
+
+
+.visiblity-hidden{
+	visibility: hidden !important;
+}
+.display-none{
+	display: none !important;
+}
+	.slick-disabled{
+		 pointer-events: auto !important;
+		 opacity: 1 !important;
+	}
+	.slick-slide{
+		background: white;
+		margin: 2em 0em;
+		/*opacity: .3;*/
+		height: 60%;
+		transition:all 300ms ease;
+		padding: .5em;
+		opacity: .7;
+		border-radius: 1em;
+		transform:scale(.97);-moz-transform:scale(.97);-ms-transform:scale(.97);-o-transform:scale(.97);-webkit-transform:scale(.97);
+		/*transform:scale(.8);-moz-transform:scale(.8);-ms-transform:scale(.8);-o-transform:scale(.8);-webkit-transform:scale(.8);*/
+		/*transform-style: preserve-3d;
+		transform: scale(1) scaleZ(1.0) rotateX(0deg) rotateY( -60deg );*/
+	}
+	.slick-slider{
+		margin: 1em;
+	}
+	/*.slick-slider{
+		perspective: 100px;
+		perspective-origin: 50% 50%;
+	}*/
+	.slick-cloned{
+		visibility: hidden;
+	}
+	.bout-label{
+		position:absolute;top:.8em;right:.05em;
+		margin: 0 auto;
+		padding:0em 1em;
+		text-align: center;
+		font-size:1em;
+	}
+	.team-viewport{
+		font-weight: 700;
+		overflow: auto;
+		position: absolute;
+		top: 3em;
+		bottom: .5em;
+		left: .5em;
+		right: .5em;
+	}
+	.slick-current + .slick-slide:before{
+		content: "Next";
+	}
+	.slick-current:before{
+		content: "Current" !important;
+	}
+	.slick-slide:before{
+		content: "Previous";
+		display: block;
+		margin: 0 auto 0.25em auto;
+		background: gold;
+		border-radius: 1em;
+		padding:0em 1em;
+		text-align: center;
+		font-size:1.5em;
+		font-weight: bold;
+	}
+
+/*	.slick-current + .slick-slide{
+		opacity: .7;
+		transform:scale(.97);-moz-transform:scale(.97);-ms-transform:scale(.97);-o-transform:scale(.97);-webkit-transform:scale(.97);
+	}*/
+	/*.slick-current{
+		height: 85% !important;
+		border:gold !important;
+		opacity: 1 !important;
+	}
+	.slick-active{
+		margin: 2em;
+		opacity: .5;
+		height: 70%;
+	}*/
+.slick-center{
+	transform:scale(1.08);-moz-transform:scale(1.08);-ms-transform:scale(1.08);-o-transform:scale(1.08);-webkit-transform:scale(1.08);
+}
+.slick-current{
+	color:#e67e22;
+	opacity:1;
+}
+
+
+
+
+</style>
+<script type="text/javascript">
+	window.mediaQuery=function(){
+		var css ="body:after{"+
+			"	content: 'undefined';"+
+			"	display:block;"+
+			"	width:100%;"+
+			"	margin:1em auto;"+
+			"	text-align:center;"+
+			//"	position: absolute;"+
+			//"	top:1em;"+
+			//"	left: 1em;"+
+			"	color: black;"+
+			"	background:white;"+
+			"	padding: .25em;"+
+			"	border-radius: .5em;"+
+			"	font-size: .75em;"+
+			"	opacity: .3;"+
+			"}"+
+			"@media(min-width : 320px) {"+ /*xxs*/
+			"	body:after{"+
+			"		content: 'xxs';"+
+			"	}"+
+			"}"+
+			"@media(min-width:480px){"+
+			"	body:after{"+
+			"		content: 'xs';"+
+			"	}"+
+			"}"+
+			"@media(min-width:768px){"+
+			"	body:after{"+
+			"		content: 'sm';"+
+			"	}"+
+			"}"+
+			"@media(min-width:992px){"+
+			"	body:after{"+
+			"		content: 'md';"+
+			"	}"+
+			"}"+
+			"@media(min-width:1200px){"+
+			"	body:after{"+
+			"		content: 'lg';"+
+			"	}"+
+			"}"
+		var head = document.getElementsByTagName('head')[0];
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.href = 'data:text/css,' + escape(css);  // IE needs this escaped
+		head.appendChild(link);
+	}
+	//if(/[?&#]mediaQuery/.test(location.search)){
+		mediaQuery()
+	//}
+</script>
+<style type="text/css">
+	/*media overrides*/
+	@media(min-width : 320px) { /*xxs*/
+	}
+	@media(min-width:480px){ /*xs*/
+		.tag{
+			font-size: 1em;
+		}
+		.queen:before,.teams .drone:before{
+			display: block;
+		}
+		.team-viewport{
+			top:3.5em;
+		}
+		.teams{
+			top:0;
+			left: 1em;
+			right: 1em;
+			bottom: 1em;
+		}
+		.blueTeam, .goldTeam{
+			padding: .5em;
+		}
+		.bout-label{
+			right:.2em;
+			top:.3em;
+			font-size: 1.5em;
+		}
+		.slick-slide:before{
+			margin: 0 auto 0.5em auto;
+		}
+		.draftPool{
+			padding: 0 0 0 8%;
+		}
+		.draftPool:before{
+			font-size:1.2em;
+			left:-4%;
+			margin:.5em 0;
+		}
+		.blueTeam:before{
+			content: "Blue Team"
+			font-size:1.2em;
+		}
+		.goldTeam:before:{
+			content: "Gold Team"
+			font-size:1.2em ;
+		}
+		.player{
+			width:48%;
+			float:left;
+		}
+	}
+	@media(min-width:768px){/*small*/
+		.slick-slide{
+			margin: 2em 1em;
+		}
+		.player{
+			width:32%;
+			float:left;
+		}
+
+	}
+	@media(min-width:992px){/*md*/
+		.player{
+			width:24%;
+			float:left;
+		}
+	}
+	@media(min-width:1200px){/*lg*/
+		.player{
+			width:100%;
+			float:none;
+		}
+	}
+</style>
+
+<script src='./kqDraft.js'></script>
+</head>
+<body style='background:#CCC; margin:1em;'>
+
+
+<div class="container-fluid" style=''>
+	<div class="row">
+		<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">&#x1F347;&nbsp;KQDraft</a>
+    </div>
+
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Link</a></li>-->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></a>
+          <ul id='dropdownCommands'class="dropdown-menu">
+            <li><a href="#">Reset Weight</a></li>
+            <li><a href="#">Clear</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Save State</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Demo Data</a></li>
+          </ul>
+        </li>
+      </ul>
+		<form id='addUser' class="navbar-form navbar-right" style='background: transparent; position: relative;overflow: hidden;'>
+			<div class="input-group">
+				<div class="btn-group " data-toggle="buttons">
+					<label class="btn btn-default">
+						<input type="radio" name="optimize" autocomplete="off"  value='droneOnly'>[&#x1F41D;&nbsp;]
+					</label>
+					<label class="btn btn-default active">
+						<input type="radio" name="optimize" autocomplete="off" checked value='drone'>&#x1F41D;
+					</label>
+<!-- 					<label class="btn btn-default active">
+						<input type="radio" name="optimize" autocomplete="off" checked value='play'>&#x1F3AE;
+					</label> -->
+					<label class="btn btn-default">
+						<input type="radio" name="optimize" autocomplete="off" value='queen'>&#x1F451;
+					</label>
+					<label class="btn btn-default" ><!--style="border-top-right-radius:0;border-bottom-right-radius:0"-->
+						<input type="radio" name="optimize" autocomplete="off" value='queenOnly'>[&#x1F451;&nbsp;]
+					</label>
+				</div>
+
+				<!-- <input type="text" class="form-control" placeholder=""> -->
+				<!-- <select class="form-control select-multiple-horizontal" size="1" style="">
+					<option value='droneOnly'>[&#x1F41D;&nbsp;]</option>
+					<option value='drone'>&#x1F41D;</option>
+					<option selected value='play'>&#x1F3AE;</option>
+					<option value='queen'>&#x1F451;</option>
+					<option value='queenOnly'>[&#x1F451;&nbsp;]</option>
+				</select> -->
+			
+			</div>
+			<div class="input-group">
+				<input id='userName' type="text" class="form-control" placeholder="">
+				<span class="input-group-btn">
+					<button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-plus"></i>&nbsp;</button>
+				</span>
+			</div>
+
+		</form>
+
+		<!-- <form id='commandForm' role="form" class="navbar-form navbar-right"> 
+			&#x1F40C;&nbsp;&nbsp;
+
+			<div class="form-group has-feedback has-feedback-left">
+				<label class="control-label sr-only"></label>
+				<input id='commandInput' type="text" class="form-control" placeholder="" value='' />
+				<i class="form-control-feedback glyphicon glyphicon-plus"></i>
+			</div>
+		</form> -->
+		<!--<ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+      </ul>-->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+	</div>
+	<div class="row" style=''>
+		<div class="col-lg-10 draft-row">
+			<div id='carousel-container'>
+				<div id='draftCarousel'>
+					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
+					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
+					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
+				</div>
+				<div id='carousel-overlay' style="position:absolute;top:0;left:0;right:0;bottom:0"></div>
+			</div>
+		</div>
+		<div class="col-lg-2" id='everyone'>
+			<div style='position: absolute;top:0;right:0;'>
+				<div id='trash' style="position:relative">
+					<span class="tag label draggable disabled">
+						<i class="glyphicon glyphicon-trash" style='padding:.5em;'>&nbsp;</i>
+					</span>
+				</div>
+			</div>
+			<div class="" id='everyone-list' style="position:relative;"></div>
+		</div>
+	</div>
+	<!--<div class="row">
+	  <div class="col-sm-1 hidden-sm hidden-xs "></div>
+	  <div class="col-md-4 hidden-sm hidden-xs " style='text-align: center;font-size: 1.5em'>Previous</div>
+	  <div class="col-sm-6 col-md-3" style='text-align: center;font-size: 1.5em'>Current</div>
+	  <div class="col-sm-6 col-md-4" style='text-align: center;font-size: 1.5em'>Next</div>
+	</div>-->
+</div>
+
+</body>
+</html>
