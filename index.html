@@ -55,7 +55,63 @@
 	<script type="text/javascript">
 		window.rwc=module.exports
 	</script>
+<style type="text/css">
 
+	
+.draggable:after{
+	content: '::';
+	float:left;
+	/*text-shadow: 0px 1px 1px #4d4d4d;*/
+	text-shadow: -1px -1px 1px #fff, 1px 1px 1px #000;
+	opacity: 0.3;
+
+}
+.draggable.no-drag:after{
+	display: none !important;
+}
+
+.longclick {
+	-webkit-animation-name: spaceboots;
+	-webkit-animation-duration: 0.8s;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes spaceboots {
+	0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+	10% { -webkit-transform: translate(-1px, -2px) rotate(-1deg); }
+	20% { -webkit-transform: translate(-3px, 0px) rotate(1deg); }
+	30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+	40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+	50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+	60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+	70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+	80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+	90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+	100% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+}
+.no-animate{
+	-o-transition-property: none !important;
+	-moz-transition-property: none !important;
+	-ms-transition-property: none !important;
+	-webkit-transition-property: none !important;
+	transition-property: none !important;
+	/*CSS transforms*/
+	-o-transform: none !important;
+	-moz-transform: none !important;
+	-ms-transform: none !important;
+	-webkit-transform: none !important;
+	transform: none !important;
+	/*CSS animations*/
+	-webkit-animation: none !important;
+	-moz-animation: none !important;
+	-o-animation: none !important;
+	-ms-animation: none !important;
+	animation: none !important;
+}
+
+</style>
 
 
 <style type="text/css">
@@ -172,7 +228,7 @@
 	.queen:before{
 		display: none;
 		content:"\1F451";
-		float:left;
+		float:right;
 	}
 	.drone{
 		background: #CCC;
@@ -189,7 +245,7 @@
 	.teams .drone:before{
 		display: none;
 		content: "\1F41D";
-		float:left;
+		float:right;
 	}
 
 	.goldTeam .drone{
@@ -212,13 +268,16 @@
 		display:block;
 		color:white;
 	}
-	#trash .place-holder{
+	.trash .label{
+		color: darkolivegreen;
+	}
+	.trash .place-holder{
 		position: absolute;
 		top:0;left:0;right:0;bottom:0;
 		width: 100%;height:100%;
 		z-index: 99999;
 	}
-	#trash .place-holder:before{
+	.trash .place-holder:before{
 		position: absolute;
 		top:-100%;
 		left: 0;
@@ -228,6 +287,9 @@
 		font-size:1em;
 		text-align: center;
 		color: black;
+	}
+	.no-drag .draggable:after{
+		display: none !important;
 	}
 	#everyone-list .place-holder{
 		position: absolute;
@@ -279,13 +341,16 @@
 		right: 0em;
 	}
 	.teams .queen{
-				color: white;
+		color: white;
 	}
+
 	.slick-slide .blueTeam,.slick-slide .goldTeam{
 		height: 100%;
+
 	}
 	.slick-slide .draftPool{
 		display: none;
+
 	}
 	/*@media only screen and (max-width : 979px) {
 		.slick-current{
@@ -298,6 +363,9 @@
 
 
 	/*reset settings from above to allow draft*/
+	.slick-current ~ .slick-slide{
+		pointer-events: auto !important;
+	}
 	.slick-current ~ .slick-slide .teams{
 		position: static;
 		top: 0;
@@ -307,9 +375,14 @@
 	}
 	.slick-current ~ .slick-slide .blueTeam,.slick-current ~ .slick-slide .goldTeam{
 		height: auto;
+
 	}
 	.slick-current ~ .slick-slide .draftPool{
 		display: block;
+	}
+
+	.slick-current .draggable:after{
+		display: none;
 	}
 
 	.player{
@@ -392,6 +465,7 @@
 		/*transform:scale(.8);-moz-transform:scale(.8);-ms-transform:scale(.8);-o-transform:scale(.8);-webkit-transform:scale(.8);*/
 		/*transform-style: preserve-3d;
 		transform: scale(1) scaleZ(1.0) rotateX(0deg) rotateY( -60deg );*/
+		pointer-events: none;
 	}
 	.slick-slider{
 		margin: 1em;
@@ -415,9 +489,14 @@
 		overflow: auto;
 		position: absolute;
 		top: 3em;
-		bottom: .5em;
-		left: .5em;
-		right: .5em;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+	.slick-current ~ .slick-slide .team-viewport{
+		left:.5em;
+		right:.5em;
+		bottom:.5em;
 	}
 	.slick-current + .slick-slide:before{
 		content: "Next";
@@ -632,7 +711,7 @@
       </ul>
 		<form id='addUser' class="navbar-form navbar-right" style='background: transparent; position: relative;overflow: hidden;'>
 			<div class="input-group">
-				<div class="btn-group " data-toggle="buttons">
+				<div id='optimizationTech' class="btn-group " data-toggle="buttons">
 					<label class="btn btn-default">
 						<input type="radio" name="optimize" autocomplete="off"  value='droneOnly'>[&#x1F41D;&nbsp;]
 					</label>
@@ -706,15 +785,15 @@
 				<div id='carousel-overlay' style="position:absolute;top:0;left:0;right:0;bottom:0"></div>
 			</div>
 		</div>
-		<div class="col-lg-2" id='everyone'>
+		<div class="col-lg-2" id='everyone' class=''>
 			<div style='position: absolute;top:0;right:0;'>
-				<div id='trash' style="position:relative">
-					<span class="tag label draggable disabled">
+				<div id='trash' class='trash' style="position:relative">
+					<span class="tag label draggable no-drag">
 						<i class="glyphicon glyphicon-trash" style='padding:.5em;'>&nbsp;</i>
 					</span>
 				</div>
 			</div>
-			<div class="" id='everyone-list' style="position:relative;"></div>
+			<div class="" id='everyone-list' class='' style="position:relative;"></div>
 		</div>
 	</div>
 	<!--<div class="row">

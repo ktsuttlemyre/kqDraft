@@ -1,3 +1,48 @@
+(function ($) {
+ $.fn.longclick = function (selector,callback,timeout) {
+ 	if(typeof selector == 'function'){
+ 		timeout=callback
+ 		callback=selector
+ 		selector=null
+ 	}
+ 	if(!timeout){
+ 		timeout=1000;
+ 	}
+   var startEvents = "touchstart.longclick mousedown.longclick";
+   var endEvents   = "touchend.longclick touchcancel.longclick touchleave.longclick mouseup.longclick mouseout.longclick";
+ 
+   var target;
+   $(this).on(startEvents,selector,function (event) {
+   	console.log('longclick started',event)
+   	target=$(this)
+   	target.addClass('longclick')
+    // save the initial event object
+    var initialEvent = event;
+    // set delay after which the callback will be called
+    var timer = window.setTimeout(function () { callback.call(target[0],initialEvent); }, timeout);
+    // bind to global event(s) for clearance
+    $(document).on(endEvents, function (e) {
+    	target.removeClass('longclick')
+        // clear timer
+        window.clearTimeout(timer);
+        // reset global event handlers
+        $(document).off(endEvents);
+        e.preventDefault()
+        return
+        // use 'return false;' if you need to prevent default handler and
+        // stop event bubbling
+    });
+    event.preventDefault()
+    return true;
+    // use 'return false;' if you need to prevent default handler and
+    // stop event bubbling
+   });
+ };
+})(jQuery);
+ 
+
+
+
 	var counter=0;
 	var uniqueID=function(){
 		return counter++
@@ -429,12 +474,28 @@
 		this.q=[]
 	}
 	QKQueue.prototype.add=function(players){ //TODO normalize outliers each time and bring their weights to the middle each time new people are added
-		var analysis=this.analyze(true)
-		var startWeight=analysis.average
 		if(!Array.isArray(players)){
 			players=[players]
 		}
-		_.forEach(_.shuffle(players),_.bind(function(player){
+		players=_.shuffle(players)
+		var stop=false
+		_.forEach(players,_.bind(function(player){
+			console.log(this.q,_.find(this.q,{name:player.name}))
+			this.q.some(function(element, i) {
+			    if (player.name.toLowerCase() === element.name.toLowerCase()) {
+					alert('Player ['+element.name+'] already exists')
+			        stop = true;
+			        return true;
+			    }
+			});
+		},this))
+		if(stop){
+			return 
+		}
+		var analysis=this.analyze()
+		var min=Math.ceil(analysis.min),max=Math.floor(analysis.max);
+		var startWeight=Math.ceil((min+analysis.average)/2)||1
+		_.forEach(players,_.bind(function(player){
 			if(player.weight==null){
 				player.weight=startWeight
 			}
@@ -451,8 +512,8 @@
 		var removed=_.remove(this.q,function(player){
 			return _.includes(playerIDs,player.id)
 		})
-		var analysis=this.analyze(true)
-		var startWeight=analysis.average
+		var analysis=this.analyze()
+
 		this.draw()
 		return analysis;
 	}
@@ -468,18 +529,18 @@
 		}
 		this.draw()
 	}
-	QKQueue.prototype.analyze=function(clamp){
+	QKQueue.prototype.analyze=function(){
 		clamp=true //force clamping always for now
 		var partition=partitionOutliers(this.q,'weight')
 		var startWeight=Math.round(average(partition.inliers||[],'weight')||1);
 		partition.average=startWeight
 		var min=Math.ceil(partition.min),max=Math.floor(partition.max);
 		//outlier clamping
-		if(clamp){
-			_.forEach(partition.outliers,function(player){
-				player.weight=_.clamp(player.weight,min,max)
-			})
-		}
+		// if(clamp){
+		// 	_.forEach(partition.outliers,function(player){
+		// 		player.weight=_.clamp(player.weight,min,max)
+		// 	})
+		// }
 		return partition
 	}
 	var emojis={ 		//html pairs		html single		unicode
@@ -738,12 +799,12 @@
 	//_.forEach(draft.queens,function(player){
 		var elem=tag(draft.queens[0],'queen')
 		elem.css('display','block')
-		elem.addClass('disabled')
+		//elem.addClass('no-drag')
 		blueTeam.append(elem)
 		elem=tag(draft.queens[1],'queen')
 		elem.css('display','block')
 
-		elem.addClass('disabled')
+		//elem.addClass('no-drag')
 		goldTeam.append(elem)
 	//})
 
@@ -789,7 +850,7 @@
 		store: null,  // @see Store
 		animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
 		//handle: ".my-handle",  // Drag handle selector within list items
-		filter: ".disabled",  // Selectors that do not lead to dragging (String or Function)
+		filter: ".no-drag",  // Selectors that do not lead to dragging (String or Function)
 		draggable: ".draggable",  // Specifies which items inside the element should be draggable
 		ghostClass: "place-holder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
@@ -812,28 +873,32 @@
 		onAdd:function(e){
 			debugger
 			console.log('added',e)
-			var parent = $(e.to)
-			if(parent.hasClass('team')&& parent.children().length==1){
+			var item=$(e.item)
+			var to = $(e.to)
+
+			if(to.hasClass('team')&& to.children().length==1){ //adding from draft to a team
 				//turn the first add into a queen if they are not already
-				var item =$(e.item) 
 				if(!item.hasClass('queen')){
-					item.addClass('queen disabled').removeClass('drone col-xs-5')
+					item.addClass('queen').removeClass('drone col-xs-5')
 					var id=item.attr('data-sort').split('-')[1]
 					item.attr('data-sort','0-'+id)
 					//todo update data with queen selection number
 				}
-			}else if($(e.from).attr('id')=='everyone-list'){
+			}else if($(e.from).attr('id')=='everyone-list'){ //adding from active to draft
 				var data = getData(e.item)
 				if(data){
 					var elem=tag(data,'drone')
 					//elem.css('display','inline-block')
 					elem.addClass('col-xs-5')
-					$(e.item).detach()
-					$(e.to).append(elem)
+					item.detach()
+					to.append(elem)
 					data.weight++
 				}else{
 					$(e.from).append($(e.item).detach())
 				}
+			}else if(to.hasClass('draftPool')){
+				item.addClass('col-xs-5')
+				item.removeClass('queen').addClass('drone')
 			}
 		}
 	}
@@ -841,21 +906,22 @@
 	var blueSortable = new Sortable(blueTeam[0],options);
 	var goldSortable = new Sortable(goldTeam[0],options);
 
-	blueTeam.add(goldTeam).on('dblclick','.tag',function(e){
+	blueTeam.add(goldTeam).longclick('.tag',function(e){
+		console.log('long click for change',this,e)
 		//turn a queen into a drone by user action
 		var item=$(this)
 		if(item.hasClass('queen')){
-			item.removeClass('disabled queen').addClass('drone col-xs-5')
+			item.removeClass('queen').addClass('drone col-xs-5')
 			var id=item.attr('data-sort').split('-')[1]
 			item.attr('data-sort','1-'+id)
 		}else if(item.hasClass('drone')){
-			item.removeClass('drone col-xs-5').addClass('disabled queen')
+			item.removeClass('drone col-xs-5').addClass('queen')
 			var id=item.attr('data-sort').split('-')[1]
 			item.attr('data-sort','0-'+id)
 		}
-		driftSortable.sort()
-		blueSortable.sort()
-		goldSortable.sort()
+		//draftSortable.sort()
+		//blueSortable.sort()
+		//goldSortable.sort()
 
 		//todo update data with queen selection number
 	})
@@ -935,6 +1001,7 @@ $(function(){
 			list.push(getData(item))
 		})
 		localStorage.setItem('activeQueue', JSON.stringify(list));
+		localStorage.setItem('activeQueueSaveTime',new Date().toLocaleString().split(', ')[0])
 	};
 	window.onbeforeunload=saveState
 
@@ -955,7 +1022,7 @@ $(function(){
 		store: null,  // @see Store
 		animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
 		//handle: ".my-handle",  // Drag handle selector within list items
-		filter: ".disabled",  // Selectors that do not lead to dragging (String or Function)
+		filter: ".no-drag",  // Selectors that do not lead to dragging (String or Function)
 		draggable: ".draggable",  // Specifies which items inside the element should be draggable
 		ghostClass: "place-holder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
@@ -994,6 +1061,7 @@ $(function(){
 
 
 	var everyoneList=$('#everyone-list')
+
 	var queueOptions={
 		group: {name:'sortable'
 			,pull:function(to,from){
@@ -1017,11 +1085,11 @@ $(function(){
 		},  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
 		sort: false,  // sorting inside list
 		delay: 0, // time in milliseconds to define when the sorting should start
-		disabled: false, // Disables the sortable if set to true.
+		disabled: true, // Disables the sortable if set to true.
 		store: null,  // @see Store
 		animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
 		//handle: ".my-handle",  // Drag handle selector within list items
-		filter: ".disabled",  // Selectors that do not lead to dragging (String or Function)
+		filter: ".no-drag",  // Selectors that do not lead to dragging (String or Function)
 		draggable: ".draggable",  // Specifies which items inside the element should be draggable
 		ghostClass: "to-draft-placeholder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
@@ -1066,6 +1134,9 @@ $(function(){
 			}else{ //undo
 				$(e.from).append(item.detach())
 			}
+		 },onEnd:function(){
+		 	queueSortable.option('disabled',true)
+		 	everyoneList.addClass('off')
 		 }
 		//  ,store: {
 		// 	/**
@@ -1089,6 +1160,16 @@ $(function(){
 		// }
 	}
 	queueSortable= new Sortable(everyoneList[0],queueOptions)
+	everyoneList.longclick('.player',function(){
+		var state = queueSortable.option("disabled"); // get
+		queueSortable.option("disabled", !state); // set
+		everyoneList.toggleClass('no-drag',!state)
+		setTimeout(function(){
+			queueSortable.option('disabled',true)
+		 	everyoneList.addClass('no-drag')
+		},5000)
+	})
+	everyoneList.addClass('no-drag')
 
 	var commandHandler=function(name){
 		var cmd=name.toLowerCase().replace(/\s+/g, '');
@@ -1112,6 +1193,7 @@ $(function(){
 	}
 
 	$('#addUser').submit(function(ev) {
+		setTimeout(function(){$('#userName').focus()})
 		ev.preventDefault(); // to stop the form from submitting
 		debugger
 		var form=$(this)
@@ -1275,13 +1357,27 @@ $(function(){
 	// 	}
 	// }))
 
-	window.loadState=function(){
+	var loadState=function(){
+		debugger
 		var list =localStorage.getItem('activeQueue');
+		var dateSaved=(localStorage.getItem('activeQueueSaveTime'))
+		var today=new Date().toLocaleString().split(', ')[0]
+
 		if(list){
-			queue.add( JSON.parse(list));
+			list=JSON.parse(list)
+			queue.add( list);
+			if(dateSaved && today!=dateSaved){
+				var ans=confirm('Would you like to reset active users weight?')
+				if(ans){
+					queue.resetWeight()
+				}
+			}
 		}
 	}
 	loadState()
+	$('#optimizationTech input[type="radio"]').on('change',function(){
+		setTimeout(function(){$('#userName').focus()})
+	})
 })
 
 // _.forEach(_.sample(toPlay,5),function(obj) {
