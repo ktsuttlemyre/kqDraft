@@ -56,6 +56,12 @@
 		window.rwc=module.exports
 	</script>
 <style type="text/css">
+.disable-select {
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
 
 .draggable{
 	position: relative;
@@ -125,9 +131,13 @@
 		text-align: center;
 		white-space: nowrap;
 		border-radius: .25em;
-
 		padding: .5em;
 		margin: .25em;
+
+		-webkit-user-select: none;  
+		-moz-user-select: none;    
+		-ms-user-select: none;      
+		user-select: none;
 	}
 	.tag a {
 		float: right;
@@ -151,7 +161,18 @@
 	}
 </style>
 <style>
-
+#carousel-container{
+	margin: 0;
+	padding: 0;
+}
+#draftCarousel{
+	margin: 0;
+	padding: 0;
+}
+.draft-row{
+	padding:0;
+	margin: 0;
+}
 	#everyone .remove-show .remove{
 		display: inline-block;
 	}
@@ -268,21 +289,34 @@
 	.blueTeam .queen{
 		background: teal;
 	}
-	.place-holder{
+	.from-queue-place-holder,.from-draft-place-holder{
 		outline: 3px dotted black;
 		display:block;
 		color:white;
 	}
-	.trash .label{
-		color: darkolivegreen;
+	.trash{
+		display: none;
+		position: fixed;
+		padding: .4em;
+		font-size: 2em;
+		bottom: 1em;
+		right:10%;
 	}
-	.trash .place-holder{
+	.trash-list{
+		position: relative;
+		/*color: darkolivegreen;*/
+		display: inline-block;
+		color:white;
+		border-radius: .5em;
+		background-color: rgba(100,100,100,.6);
+	}
+	.trash .from-queue-place-holder,.trash .from-draft-place-holder{
 		position: absolute;
 		top:0;left:0;right:0;bottom:0;
 		width: 100%;height:100%;
 		z-index: 99999;
 	}
-	.trash .place-holder:before{
+	.trash .from-queue-place-holder:before,.trash .from-draft-place-holder:before{
 		position: absolute;
 		top:-100%;
 		left: 0;
@@ -296,13 +330,17 @@
 	.no-drag .draggable:after{
 		display: none !important;
 	}
-	#everyone-list .place-holder{
+	#everyone-list{
+		display: block;
+		position:relative;
+	}
+	#everyone-list .from-draft-place-holder{
 		position: absolute;
+		width: 100%;height: 100%; min-height: 15em;/*added min height cause #everyone and #everyone-list has problems calculating height when display width=sm and md*/
 		top:0;left:0;right:0;bottom:0;
-		width: 100%;height:100%;
 		z-index: 99999;
 	}
-	#everyone-list .place-holder:before{
+	#everyone-list .from-draft-place-holder:before{
 		content: 'Undraft';
 		display: block;
 		line-height: 15em;
@@ -316,11 +354,14 @@
 		background: white;
 		color:white;
 	}
-	.blueTeam .place-holder{
+	.from-queue-place-holder .metric{
+		display: none;
+	}
+	.blueTeam .from-queue-place-holder,.blueTeam .from-draft-place-holder{
 		outline-color: lightskyblue;
 		/*background: #0099dd*/
 	}
-	.goldTeam .place-holder{
+	.goldTeam .from-queue-place-holder,.goldTeam .from-draft-place-holder{
 		outline-color: orangered;
 	}
 /*	.draft-row{
@@ -400,6 +441,10 @@
 		width: 100%;
 		float: none;
 		max-width: 400px;
+		-webkit-user-select: none;  
+		-moz-user-select: none;    
+		-ms-user-select: none;      
+		user-select: none;
 	}
 	.metric{
 		position: relative;
@@ -461,7 +506,8 @@
 		background: white;
 		margin: 2em 0em;
 		/*opacity: .3;*/
-		height: 60%;
+		min-height: 28em;/* 25em will get all draft inputs but i want room for win data entry*/
+		max-height: 60%;
 		transition:all 300ms ease;
 		padding: .5em;
 		opacity: .7;
@@ -497,6 +543,11 @@
 		bottom: .5em;
 		left: .5em;
 		right: .5em;
+		padding:0;
+	}
+	.team-viewport > .row{
+		margin: 0;
+		padding: 0;
 	}
 	.slick-current ~ .slick-slide .team-viewport{
 		left:.5em;
@@ -542,7 +593,17 @@
 	color:#e67e22;
 	opacity:1;
 }
-
+.slick-arrow{
+	top:auto;
+	bottom:0em;
+}
+.slick-next{
+	right:8em;
+}
+.slick-prev{
+	left:8em;
+}
+.slick-list{}
 
 
 
@@ -603,6 +664,9 @@
 <style type="text/css">
 	/*media overrides*/
 	@media(min-width : 320px) { /*xxs*/
+		.slick-slide{
+			height: 1em; /*set it to the smallest height*/
+		}
 	}
 	@media(min-width:480px){ /*xs*/
 		.tag{
@@ -664,6 +728,7 @@
 	@media(min-width:768px){/*small*/
 		.slick-slide{
 			margin: 2em 1em;
+			height: 40%;
 		}
 		.player{
 			width:32%;
@@ -679,8 +744,14 @@
 			width:24%;
 			float:left;
 		}
+		.slick-slide{
+
+		}
 	}
 	@media(min-width:1200px){/*lg*/
+		.slick-slide{
+			height:70%;
+		}
 		.player{
 			width:100%;
 			float:none;
@@ -804,14 +875,14 @@
 			</div>
 		</div>
 		<div class="col-lg-2" id='everyone' class=''>
-			<div style='position: absolute;top:0;right:0;'>
+			<!--<div style='position: absolute;top:0;right:0;'>
 				<div id='trash' class='trash' style="position:relative">
 					<span class="tag label draggable no-drag">
 						<i class="glyphicon glyphicon-trash" style='padding:.5em;'>&nbsp;</i>
 					</span>
 				</div>
-			</div>
-			<div class="" id='everyone-list' class='' style="position:relative;"></div>
+			</div>-->
+			<div class="" id='everyone-list' class='' style=""></div>
 		</div>
 	</div>
 	<!--<div class="row">
@@ -821,6 +892,12 @@
 	  <div class="col-sm-6 col-md-4" style='text-align: center;font-size: 1.5em'>Next</div>
 	</div>-->
 </div>
-
+	<div class='trash'>
+		<div id='trash' class='trash-list' style="">
+			<span class="tag draggable no-drag">
+				<i class="glyphicon glyphicon-trash" style=''></i>
+			</span>
+		</div>
+	</div>
 </body>
 </html>

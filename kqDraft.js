@@ -27,13 +27,14 @@
         window.clearTimeout(timer);
         // reset global event handlers
         $(document).off(endEvents);
-        e.preventDefault()
-        return
+        //e.preventDefault()
+        return true
         // use 'return false;' if you need to prevent default handler and
         // stop event bubbling
     });
-    event.preventDefault()
-    return true;
+    //event.preventDefault()
+    event.stopPropagation()
+    return ;
     // use 'return false;' if you need to prevent default handler and
     // stop event bubbling
    });
@@ -41,7 +42,7 @@
 })(jQuery);
  
 
-
+	var weightIncrement=2
 
 	var counter=0;
 	var uniqueID=function(){
@@ -576,8 +577,9 @@
 		//		var id=$(this).parent().attr('id').split(':')[1]
 		//		queue.remove(id)
 		//	}))
-		div.append($('<span/>',{class:'metric weight'}).text(player.weight))
-		div.append($('<span/>',{class:'metric optimize'}).text(optimize))
+		div.append($('<span/>',{class:'metric weight'}).text(player.weight||'_ '))
+		div.append($('<span/>',{class:'metric optimize'}).text(optimize||'_ '))
+		div.append($('<span/>',{class:'metric turns'}).text(player.turns||'_ '))
 		//div.append($('<span/>',{class:'metric wins'}).text(player.weight))
 		return div
 	}
@@ -587,7 +589,7 @@
 		}
 		var elem=$(id)
 		elem.empty()
-		_.forEach(_.sortBy(this.q,['weight']).reverse(),function(player){
+		_.forEach(_.sortBy(this.q,['weight']),function(player){
 			elem.append(dataToPlayerDiv(player))
 		})
 	}
@@ -598,7 +600,7 @@
 		}else if(player.optimize=='queen'){
 			return .80+x //player.frequency.queen+x
 		}else if(player.optimize=='drone'){
-			return .1+x
+			return .2+x
 		}else if(player.optimize=='droneOnly'){
 			return 0+x
 		}//else if(player.optimize=='play'){
@@ -609,7 +611,7 @@
 		if(player.optimize=='queenOnly'){
 			return 0+(iteration*.001) 
 		}else if(player.optimize=='queen'){
-			return .50+x;
+			return .60+x;
 		}else if(player.optimize=='drone'){
 			return 1.0+x
 		}else if (player.optimize=='droneOnly'){
@@ -637,7 +639,7 @@
 		while(picked.length<n && queue.length){
 			var player=queue[index]
 			if(randomEngine.integer(1,100)<=(100*fn(player,index))+bonusProbablity){
-				player.weight++
+				player.weight+=weightIncrement
 				picked.push(_.pullAt(queue,index)[0]);
 			}else{
 				index++
@@ -852,7 +854,7 @@
 		//handle: ".my-handle",  // Drag handle selector within list items
 		filter: ".no-drag",  // Selectors that do not lead to dragging (String or Function)
 		draggable: ".draggable",  // Specifies which items inside the element should be draggable
-		ghostClass: "place-holder",  // Class name for the drop placeholder
+		ghostClass: "from-draft-place-holder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
 		//dragClass: "sortable-drag",  // Class name for the dragging item
 		dataIdAttr: 'data-sort',
@@ -892,7 +894,7 @@
 					elem.addClass('col-xs-5')
 					item.detach()
 					to.append(elem)
-					data.weight++
+					data.weight+=weightIncrement
 				}else{
 					$(e.from).append($(e.item).detach())
 				}
@@ -900,6 +902,8 @@
 				item.addClass('col-xs-5')
 				item.removeClass('queen').addClass('drone')
 			}
+		},onChoose:function(){
+			unlockActiveList()
 		}
 	}
 	var draftSortable = new Sortable(draftDiv[0],options);
@@ -991,9 +995,13 @@ var getData=function(item){
 	}
 	return _.find(queue.q,{id:id})
 }
+
+
 var reinitQueue=[]
 var kQDraft=KQDraft()
+var trash;
 $(function(){
+	trash=$('#trash').parent()
 	window.saveState=function(){
 		debugger
 		var children=everyoneList.children(),list=[];
@@ -1049,7 +1057,7 @@ $(function(){
 			var data = getData(item)
 			if(data){
 				item.detach()
-				data.weight--
+				data.weight-=weightIncrement
 				queue.remove(data.id)
 				queue.draw()
 			}else{ //undo
@@ -1057,7 +1065,7 @@ $(function(){
 			}
 		 }
 	}
-	trashSortable= new Sortable($('#trash')[0],trashOptions)
+	trashSortable= new Sortable(trash.find('.trash-list')[0],trashOptions)
 
 
 	var everyoneList=$('#everyone-list')
@@ -1091,7 +1099,7 @@ $(function(){
 		//handle: ".my-handle",  // Drag handle selector within list items
 		filter: ".no-drag",  // Selectors that do not lead to dragging (String or Function)
 		draggable: ".draggable",  // Specifies which items inside the element should be draggable
-		ghostClass: "to-draft-placeholder",  // Class name for the drop placeholder
+		ghostClass: "from-queue-place-holder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
 		//dragClass: "sortable-drag",  // Class name for the dragging item
 		dataIdAttr: 'data-sort',
@@ -1118,7 +1126,7 @@ $(function(){
 				//remove player's html element
 				item.detach()
 				//decrease weight
-				data.weight--
+				data.weight-=weightIncrement
 
 				//draft a new player
 				// var players=kQDraft.draft(1);
@@ -1134,9 +1142,8 @@ $(function(){
 			}else{ //undo
 				$(e.from).append(item.detach())
 			}
-		 },onEnd:function(){
-		 	queueSortable.option('disabled',true)
-		 	everyoneList.addClass('off')
+		 },onChoose:function(){
+		 	trash.fadeIn()
 		 }
 		//  ,store: {
 		// 	/**
@@ -1159,16 +1166,54 @@ $(function(){
 		// 	}
 		// }
 	}
+	var isMobile=false;
 	queueSortable= new Sortable(everyoneList[0],queueOptions)
-	everyoneList.longclick('.player',function(){
-		var state = queueSortable.option("disabled"); // get
-		queueSortable.option("disabled", !state); // set
-		everyoneList.toggleClass('no-drag',!state)
-		setTimeout(function(){
-			queueSortable.option('disabled',true)
-		 	everyoneList.addClass('no-drag')
-		},5000)
-	})
+	window.unlockActiveList=function(lock){
+		if(typeof lock!='boolean'){
+			lock=null;
+		}
+		var relock=function(){
+				queueSortable.option('disabled',true)
+			 	everyoneList.addClass('no-drag')
+		 		trash.fadeOut()
+			 	$(document).off(activityEvents)
+		}
+		if(lock){
+			relock()
+			return
+		}
+		queueSortable.option("disabled", false); // set
+		everyoneList.toggleClass('no-drag',false)
+		trash.fadeIn()
+		if(isMobile){
+			var debounce_relock=_.debounce(relock,5000)
+			debounce_relock()
+
+			var activityEvents='click mousedown mousemove touchstart touchmove keydown keypress scroll'.split(' ').map(function(evnt){return evnt+'.inactiveDetect_'+Date.now()+'_'+uniqueID()})
+			var scroll=activityEvents.pop()
+
+			$(document).on(activityEvents.join(' '),debounce_relock)
+			$(document).on(scroll,relock)
+		}
+	}
+	// $(document).on('mousemove.yyyyyyyyy',function(){
+	// 	alert('mousemove')
+	// 	unlockActiveList(true)
+	// 	$(document).off('mousemove.yyyyyyyyy')
+	// })
+	//everyoneList.longclick('.player',unlockActiveList)
+	$(document).on('touchstart', function (e) {
+		if (e.touches.length == 3){
+			alert('3 touch')
+			unlockActiveList()
+		}
+		if(!isMobile){
+			isMobile=true
+			unlockActiveList(true)
+		}
+	});
+	setTimeout(unlockActiveList)
+
 	everyoneList.addClass('no-drag')
 
 	var commandHandler=function(name){
@@ -1338,7 +1383,7 @@ $(function(){
 		window.init=true
 
 		reinitQueue.push(function(){setTimeout(function(){draftCarousel.slick('slickGoTo',draftCarousel.slick('getSlick').slideCount-2 , true)})})//-(5-draftCarousel.slick('getOption','slidesToShow')
-		carouselOverlay.hide()
+		carouselOverlay.fadeOut()
 		kQDraft.draft()
 		setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').removeClass('display-none')})
 
