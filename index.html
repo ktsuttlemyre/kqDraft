@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 	<!--////////////////////////
@@ -120,6 +121,13 @@
 	-ms-animation: none !important;
 	animation: none !important;
 }
+.rotate90{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
 
 </style>
 
@@ -184,6 +192,7 @@
 		text-align: center;
 		background-color: #DED;
 		border-radius: 2em;
+		margin: 1em 3.5em;
 	}
 	#everyone:before{
 		content: 'Active';
@@ -294,29 +303,30 @@
 		display:block;
 		color:white;
 	}
-	.trash{
+	.floating-tile-wrapper{
 		display: none;
 		position: fixed;
-		padding: .4em;
 		font-size: 2em;
-		bottom: 1em;
-		right:10%;
+		bottom: .5em;
+		z-index: 9999999;
 	}
-	.trash-list{
-		position: relative;
-		/*color: darkolivegreen;*/
+	.floating-tile{
+		border-radius: .5em;
 		display: inline-block;
 		color:white;
-		border-radius: .5em;
+		padding: .25em;
 		background-color: rgba(100,100,100,.6);
 	}
-	.trash .from-queue-place-holder,.trash .from-draft-place-holder{
+	.overlay-drop-list{
+		position: relative;
+	}
+	.overlay-drop-list .from-queue-place-holder,.overlay-drop-list .from-draft-place-holder{
 		position: absolute;
 		top:0;left:0;right:0;bottom:0;
 		width: 100%;height:100%;
-		z-index: 99999;
+		z-index: 9999999;
 	}
-	.trash .from-queue-place-holder:before,.trash .from-draft-place-holder:before{
+	#trash .from-queue-place-holder:before,#trash .from-draft-place-holder:before{
 		position: absolute;
 		top:-100%;
 		left: 0;
@@ -338,7 +348,7 @@
 		position: absolute;
 		width: 100%;height: 100%; min-height: 15em;/*added min height cause #everyone and #everyone-list has problems calculating height when display width=sm and md*/
 		top:0;left:0;right:0;bottom:0;
-		z-index: 99999;
+		z-index: 9999999;
 	}
 	#everyone-list .from-draft-place-holder:before{
 		content: 'Undraft';
@@ -390,7 +400,7 @@
 		color: white;
 	}
 
-	.slick-slide .blueTeam,.slick-slide .goldTeam{
+	.slick-slide .team{
 		height: 100%;
 
 	}
@@ -504,7 +514,7 @@
 	}
 	.slick-slide{
 		background: white;
-		margin: 2em 0em;
+		margin: 0;
 		/*opacity: .3;*/
 		min-height: 28em;/* 25em will get all draft inputs but i want room for win data entry*/
 		max-height: 60%;
@@ -594,16 +604,33 @@
 	opacity:1;
 }
 .slick-arrow{
-	top:auto;
+	font-size: initial;
 	bottom:0em;
+	top:auto;
+	z-index:1;
+/*	background: white;
+	width: 5em;
+	height: 2em;*/
+	border-radius: 1em;
 }
+.slick-arrow:before{
+/*	color:black;*/
+font-size: 2.5em;
+}
+.slick-next:before{
+	float:right;
+}
+
+
 .slick-next{
-	right:8em;
+	right:5em;
 }
 .slick-prev{
-	left:8em;
+	left:5em;
 }
-.slick-list{}
+.slick-track{
+	margin: 0 0 2em 0;
+}
 
 
 
@@ -727,7 +754,7 @@
 	}
 	@media(min-width:768px){/*small*/
 		.slick-slide{
-			margin: 2em 1em;
+			margin: 0  1em 1em 1em;
 			height: 40%;
 		}
 		.player{
@@ -745,7 +772,7 @@
 			float:left;
 		}
 		.slick-slide{
-
+			margin: 1.5em 1em;
 		}
 	}
 	@media(min-width:1200px){/*lg*/
@@ -754,14 +781,20 @@
 		}
 		.player{
 			width:100%;
+
 			float:none;
 		}
+		#everyone{
+			margin: 0;
+			max-width: 20em;
+		}
 	}
+
 </style>
 
 <script src='./kqDraft.js'></script>
 </head>
-<body style='background:#CCC; margin:1em;'>
+<body style='background:#CCC; padding:1em;'>
 
 
 <div class="container-fluid" style=''>
@@ -782,9 +815,10 @@
         <li><a href="#">Link</a></li>-->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></a>
-          <ul id='dropdownCommands'class="dropdown-menu">
+          <ul id='dropdownCommands' class="dropdown-menu">
             <li><a href="#">Reset Weight</a></li>
             <li><a href="#">Clear</a></li>
+            <li><a href="#">Fullscreen</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#">Save State</a></li>
             <li role="separator" class="divider"></li>
@@ -865,6 +899,7 @@
 	</div>
 	<div class="row" style=''>
 		<div class="col-lg-10 draft-row">
+			<!--<button id='draft_button' class="btn btn-default"><i class="glyphicon glyphicon-random"></i>&nbsp;</button>-->
 			<div id='carousel-container'>
 				<div id='draftCarousel'>
 					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
@@ -872,6 +907,7 @@
 					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
 				</div>
 				<div id='carousel-overlay' style="position:absolute;top:0;left:0;right:0;bottom:0"></div>
+				<div id='fun_message' style='text-align: center'></div>
 			</div>
 		</div>
 		<div class="col-lg-2" id='everyone' class=''>
@@ -892,10 +928,17 @@
 	  <div class="col-sm-6 col-md-4" style='text-align: center;font-size: 1.5em'>Next</div>
 	</div>-->
 </div>
-	<div class='trash'>
-		<div id='trash' class='trash-list' style="">
-			<span class="tag draggable no-drag">
+	<div id='trash' class='floating-tile-wrapper' style="left:.25em;">
+		<div class='overlay-drop-list floating-tile' style="">
+			<span class="tag draggable no-drag" style="margin:0">
 				<i class="glyphicon glyphicon-trash" style=''></i>
+			</span>
+		</div>
+	</div>
+	<div id='quickJumpTile' class='floating-tile-wrapper' style="right:.25em;">
+		<div class='overlay-drop-list floating-tile' style="">
+			<span class="tag draggable no-drag" style="margin:0">
+				<i class="glyphicon glyphicon glyphicon-transfer rotate90" style=''></i>
 			</span>
 		</div>
 	</div>

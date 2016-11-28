@@ -1,3 +1,15 @@
+function launchFullScreen(element) {
+  if(element.requestFullScreen) {
+    element.requestFullScreen();
+  } else if(element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if(element.webkitRequestFullScreen) {
+    element.webkitRequestFullScreen();
+  }
+}
+
+
+
 (function ($) {
  $.fn.longclick = function (selector,callback,timeout) {
  	if(typeof selector == 'function'){
@@ -63,7 +75,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'1'
@@ -77,7 +90,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'2'
@@ -91,7 +105,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'3'
@@ -105,7 +120,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'4'
@@ -119,7 +135,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'5'
@@ -133,7 +150,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'6'
@@ -147,7 +165,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'7'
@@ -161,7 +180,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'8'
@@ -175,7 +195,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'9'
@@ -189,7 +210,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'10'
@@ -203,7 +225,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'11'
@@ -217,7 +240,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'12'
@@ -231,7 +255,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'13'
@@ -245,7 +270,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'14'
@@ -259,7 +285,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'15'
@@ -273,7 +300,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'16'
@@ -287,7 +315,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'17'
@@ -301,7 +330,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'18'
@@ -315,7 +345,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'19'
@@ -329,7 +360,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'20'
@@ -343,7 +375,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'21'
@@ -357,7 +390,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'22'
@@ -371,7 +405,8 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		},{
 			id:'23'
@@ -385,13 +420,52 @@
 			}
 			,history:{
 				games:0
-				,timesAs:{queen:0,drone:0}
+				,asQueen:0
+				,asDrone:0
 			}
 		}
 
 
 
 	];
+	var Player=function(obj){
+		if(obj instanceof Player){
+			return obj
+		}else if(!(this instanceof Player)){
+			return new Player(obj)
+		}
+		if(typeof obj=='string'){
+			obj={name:obj}
+		}
+		
+		var template={
+			id:null
+			,name:null
+			,teir:1
+			,turns:0
+			,optimize:'drone'
+			,frequency:{queen:.8}
+			,stats:{
+				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
+				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
+			}
+			,history:{
+				games:0
+				,asQueen:0
+				,asDrone:0
+			}
+		}
+
+		$.extend(true,this,template)
+		$.extend(true,this,obj)
+
+		if(this.id==null){
+			this.id=Date.now()
+		}
+		if(typeof this.turns != 'number'){
+			this.turns = 0
+		}
+	 }
 
 	//http://stackoverflow.com/questions/20811131/javascript-remove-outlier-from-an-array
 	//http://mathworld.wolfram.com/Outlier.html
@@ -480,6 +554,9 @@
 		}
 		players=_.shuffle(players)
 		var stop=false
+		players=players.map(function(player){
+			return Player(player)
+		})
 		_.forEach(players,_.bind(function(player){
 			console.log(this.q,_.find(this.q,{name:player.name}))
 			this.q.some(function(element, i) {
@@ -495,7 +572,7 @@
 		}
 		var analysis=this.analyze()
 		var min=Math.ceil(analysis.min),max=Math.floor(analysis.max);
-		var startWeight=Math.ceil((min+analysis.average)/2)||1
+		var startWeight=Math.floor((min+analysis.average)/3)||1
 		_.forEach(players,_.bind(function(player){
 			if(player.weight==null){
 				player.weight=startWeight
@@ -524,16 +601,16 @@
 		}
 		this.draw()
 	}
-	QKQueue.prototype.resetWeight=function(){
+	QKQueue.prototype.setAll=function(attr,val){
 		for(var i=0,l=this.q.length;i<l;i++){
-			this.q[i].weight=1;
+			this.q[i][attr]=val;
 		}
 		this.draw()
 	}
 	QKQueue.prototype.analyze=function(){
 		clamp=true //force clamping always for now
 		var partition=partitionOutliers(this.q,'weight')
-		var startWeight=Math.round(average(partition.inliers||[],'weight')||1);
+		var startWeight=Math.floor(average(partition.inliers||[],'weight')||1);
 		partition.average=startWeight
 		var min=Math.ceil(partition.min),max=Math.floor(partition.max);
 		//outlier clamping
@@ -552,6 +629,7 @@
 		,grapes:String.fromCharCode(0xD83C,0xDF47) //		&#xD83C;&#xDF47;	&#x1F347;	\u1F347
 		,police:String.fromCharCode(0xD83D,0xDEC3)	//&#xD83D;&#xDEC3;	&#x1F6C3;	\u1F6C3
 		,clover:String.fromCharCode(0xD83C,0xDF40) //&#xD83C;&#xDF40;	&#x1F340;	\u1F340
+		,heart:String.fromCharCode(0x2764,0xFE0F)
 	}
 	var dataToPlayerDiv=function(player){
 		var div=$('<div/>',{class:'player draggable',id:'id_'+uniqueID()+'_'+player.id})
@@ -577,9 +655,9 @@
 		//		var id=$(this).parent().attr('id').split(':')[1]
 		//		queue.remove(id)
 		//	}))
-		div.append($('<span/>',{class:'metric weight'}).text(player.weight||'_ '))
-		div.append($('<span/>',{class:'metric optimize'}).text(optimize||'_ '))
-		div.append($('<span/>',{class:'metric turns'}).text(player.turns||'_ '))
+		div.append($('<span/>',{class:'metric weight'}).text(player.weight==null?'_ ':player.weight))
+		div.append($('<span/>',{class:'metric optimize'}).text(optimize==null?'_ ':optimize))
+		div.append($('<span/>',{class:'metric turns'}).text(player.turns==null?'_ ':player.turns))
 		//div.append($('<span/>',{class:'metric wins'}).text(player.weight))
 		return div
 	}
@@ -640,6 +718,7 @@
 			var player=queue[index]
 			if(randomEngine.integer(1,100)<=(100*fn(player,index))+bonusProbablity){
 				player.weight+=weightIncrement
+				player.turns++
 				picked.push(_.pullAt(queue,index)[0]);
 			}else{
 				index++
@@ -833,7 +912,7 @@
 		group: {name:'sortable'
 				,pull:function(to,from){
 					console.log('to',to,'from',from)
-					if(to.el.id=='trash'|| to.el.id=='everyone-list'){
+					if(to.el.parentNode.id=='trash'|| to.el.id=='everyone-list'|| to.el.parentNode.id=='quickJumpTile'){
 						return true
 					}
 					if(to.el.id.split('_')[0]==from.el.id.split('_')[0]){
@@ -895,6 +974,8 @@
 					item.detach()
 					to.append(elem)
 					data.weight+=weightIncrement
+					data.turns++
+					queue.draw()
 				}else{
 					$(e.from).append($(e.item).detach())
 				}
@@ -996,12 +1077,38 @@ var getData=function(item){
 	return _.find(queue.q,{id:id})
 }
 
+var isElementInView= function (element, percent) {
+        element=$(element)
+        var pageTop = $(window).scrollTop();
+        var pageBottom = pageTop + $(window).height();
+        var elementTop = element.offset().top;
+        var elementBottom = elementTop + element.height();
+        var elementHeightPercent=element.height()*percent
+
+        if (percent == 1){
+            return ((pageTop < elementTop) && (pageBottom > elementBottom));
+        } else if(!percent){
+            return ((elementTop <= pageBottom) && (elementBottom >= pageTop));
+        } else{
+        	//alert( (pageBottom+'-'+elementTop)+' && '+(elementBottom+'-'+pageTop)+' = '+elementHeightPercent+ ' '+(pageBottom-elementTop>elementHeightPercent && elementBottom-pageTop>elementHeightPercent))
+        	return (pageBottom-elementTop>elementHeightPercent && elementBottom-pageTop>elementHeightPercent)
+        }
+    }
+
 
 var reinitQueue=[]
 var kQDraft=KQDraft()
-var trash;
+var trash,quickJumpTile;
 $(function(){
-	trash=$('#trash').parent()
+	trash=$('#trash'),quickJumpTile=$('#quickJumpTile');
+	quickJumpTile.children(':first').on('click',function(){
+		var everyone=$('#everyone')
+		if(!isElementInView(everyone,.80)){
+			$("html, body").animate({ scrollTop: everyone.offset().top }, 300);
+		}else{
+			$("html, body").animate({ scrollTop: 0 }, 300);
+		}
+	})
 	window.saveState=function(){
 		debugger
 		var children=everyoneList.children(),list=[];
@@ -1012,6 +1119,7 @@ $(function(){
 		localStorage.setItem('activeQueueSaveTime',new Date().toLocaleString().split(', ')[0])
 	};
 	window.onbeforeunload=saveState
+
 
 
 
@@ -1058,6 +1166,7 @@ $(function(){
 			if(data){
 				item.detach()
 				data.weight-=weightIncrement
+				data.turns--
 				queue.remove(data.id)
 				queue.draw()
 			}else{ //undo
@@ -1065,23 +1174,27 @@ $(function(){
 			}
 		 }
 	}
-	trashSortable= new Sortable(trash.find('.trash-list')[0],trashOptions)
+	trashSortable= new Sortable(trash.find('.floating-tile')[0],trashOptions)
 
-
+	var funMessage=$('#fun_message')
 	var everyoneList=$('#everyone-list')
-
+	var autoLock=false
 	var queueOptions={
 		group: {name:'sortable'
 			,pull:function(to,from){
-				if(to.el.id=='trash'){
+				if(to.el.parentNode.id=='trash'){
 					return true
 				}
-				if(from.el.id==to.el.id){
+				if(from.el.id==to.el.id||from.el.parentNode.id==to.el.parentNode.id){
 					return false
 				}
 				if($(to.el).hasClass('draftPool')){
 					return true
 				}
+				//dont allow quick drop yet
+				// if(to.el.parentNode.id=='quickJumpTile'&&from.el.id=='everyone-list'){
+				// 	return true
+				// }
 				return false
 			},put:function(to){
 				//if(to.el.id==everyoneList.attr('id')){
@@ -1093,7 +1206,7 @@ $(function(){
 		},  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
 		sort: false,  // sorting inside list
 		delay: 0, // time in milliseconds to define when the sorting should start
-		disabled: true, // Disables the sortable if set to true.
+		disabled: autoLock, // Disables the sortable if set to true.
 		store: null,  // @see Store
 		animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
 		//handle: ".my-handle",  // Drag handle selector within list items
@@ -1123,11 +1236,15 @@ $(function(){
 			var item=$(e.item)
 			var data = getData(item)
 			if(data){
+				if(e.to.parentNode.id=='quickJumpTile' && e.from.id=='everyone-list'){ //condition is going from everyone queue to quickJump
+					alert('not implemented yet')
+					return
+				}
 				//remove player's html element
 				item.detach()
 				//decrease weight
 				data.weight-=weightIncrement
-
+				data.turns--
 				//draft a new player
 				// var players=kQDraft.draft(1);
 				// _.forEach(players,function(player){
@@ -1144,6 +1261,7 @@ $(function(){
 			}
 		 },onChoose:function(){
 		 	trash.fadeIn()
+		 	isMobile && quickJumpTile.fadeIn()
 		 }
 		//  ,store: {
 		// 	/**
@@ -1168,23 +1286,28 @@ $(function(){
 	}
 	var isMobile=false;
 	queueSortable= new Sortable(everyoneList[0],queueOptions)
+	new Sortable(quickJumpTile.find('.floating-tile')[0],queueOptions)
+
 	window.unlockActiveList=function(lock){
+		return
 		if(typeof lock!='boolean'){
 			lock=null;
 		}
 		var relock=function(){
-				queueSortable.option('disabled',true)
-			 	everyoneList.addClass('no-drag')
+				autoLock && queueSortable.option('disabled',true)
+			 	autoLock && everyoneList.addClass('no-drag')
 		 		trash.fadeOut()
+		 		quickJumpTile.fadeOut()
 			 	$(document).off(activityEvents)
 		}
 		if(lock){
 			relock()
 			return
 		}
-		queueSortable.option("disabled", false); // set
-		everyoneList.toggleClass('no-drag',false)
+		autoLock && queueSortable.option("disabled", false); // set
+		autoLock && everyoneList.toggleClass('no-drag',false)
 		trash.fadeIn()
+		isMobile && quickJumpTile.fadeIn()
 		if(isMobile){
 			var debounce_relock=_.debounce(relock,5000)
 			debounce_relock()
@@ -1201,38 +1324,49 @@ $(function(){
 	// 	unlockActiveList(true)
 	// 	$(document).off('mousemove.yyyyyyyyy')
 	// })
-	//everyoneList.longclick('.player',unlockActiveList)
+	autoLock && everyoneList.longclick('.player',unlockActiveList)
 	$(document).on('touchstart', function (e) {
-		if (e.touches.length == 3){
-			alert('3 touch')
-			unlockActiveList()
-		}
+		// if (e.touches.length == 3){
+		// 	alert()
+		// 	alert('3 touch')
+		// 	unlockActiveList()
+		// }
 		if(!isMobile){
 			isMobile=true
-			unlockActiveList(true)
+			trash.fadeIn()
+			quickJumpTile.fadeIn()
 		}
+		//unlockActiveList(true)
 	});
+
 	setTimeout(unlockActiveList)
 
-	everyoneList.addClass('no-drag')
+	autoLock && everyoneList.addClass('no-drag')
 
 	var commandHandler=function(name){
-		var cmd=name.toLowerCase().replace(/\s+/g, '');
-		if(cmd=='demo'||cmd=='demodata'){
+		var cmd=name.toUpperCase().replace(/\s+/g, '');
+		if(cmd=='DEMO'||cmd=='DEMODATA'){
 			queue.add(database)
 			return 1
-		}else if(cmd=='clear'){
+		}else if(cmd=='CLEAR'){
 			queue.clear()
 			return 1
-		}else if(cmd=='resetweight'){
-			queue.resetWeight()
+		}else if(cmd=='RESETTURNS'){
+			alert()
+			queue.setAll('turns',0)
 			return 1
-		}else if(cmd=='save'||cmd=='savestate'){
+		}else if(cmd=='RESETWEIGHT'){
+			queue.setAll('weight',1)
+			return 1
+		}else if(cmd=='SAVE'||cmd=='SAVESTATE'){
 			window.saveState()
 			return 1
-		}else if(cmd=='load'||cmd=='loadstate'){
+		}else if(cmd=='LOAD'||cmd=='LOADSTATE'){
 			window.loadState()
 			return 1
+		}else if(cmd=='FULLSCREEN'){
+			// Launch fullscreen for browsers that support it!
+			launchFullScreen(document.documentElement); // the whole page
 		}
 		return 0
 	}
@@ -1253,9 +1387,10 @@ $(function(){
 			return 
 		}
 		if(commandHandler(name)){
+			queue.draw()
 			return 
 		}
-		var player={id:Date.now().toString(),name:name,optimize:optimize}
+		var player={id:Date.now().toString(),name:name,optimize:optimize,turns:0,history:{games:0,asQueen:0,asDrone:0}}
 		queue.add(player)
 
 		//this.submit(); // If all the validations succeeded
@@ -1276,7 +1411,7 @@ $(function(){
 	//alert(draftCarousel.slick('getSlick').slideCount)
 	draftCarousel.on('reInit',function(e){ //breakpoint
 		if(!window.init){
-			setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
+			//setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
 			return
 		}
 
@@ -1293,14 +1428,20 @@ $(function(){
 	
 	draftCarousel.on('beforeChange', function(event, slick, currentSlide, nextSlide){
 		if(!window.init){
-			setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
+			//setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
 			return
 		}
 		if(nextSlide>=slick.slideCount-1){
-		//alert('draft'+currentSlide+' '+nextSlide+' '+slick.slideCount)
+			//alert('draft'+currentSlide+' '+nextSlide+' '+slick.slideCount)
 			kQDraft.draft();
 		}
+		console.log(currentSlide,nextSlide)
+		funMessage.text(_.sample(quotes))
 	})
+
+	// $('#draft_button').on('click',function(){
+	// 	kQDraft.draft()
+	// })
 
 	draftCarousel.slick({
 		//dots:true,
@@ -1315,11 +1456,13 @@ $(function(){
 		slidesToShow: 3,
 		infinite:false,
 		//waitForAnimate:false,
+		initialSlide:2,
 		responsive: [
 			{
 			breakpoint: 992,//768,
 			settings: {
 				//dots:true,
+				initialSlide:2,
 				centerMode: false,
 				draggable:false,
 				swipe:false,
@@ -1365,14 +1508,21 @@ $(function(){
 
 	// });
 
+	var quotes=[emojis.bee+' all that you can '+emojis.bee,emojis.grapes+' your enemy!','Destory the '+emojis.crown,emojis.snail,emojis.crown,emojis.bee,emojis.grapes]
+
 	queue.clear()
 	var carouselOverlay=$('#carousel-overlay')
 	//var fauxButton=$('<button/>',{class:'proxy-arrow-next slick-arrow slick-next',type:'button'})
 	var fauxButton=$('<div/>',{class:'',style:'position:absolute;top:0;left:0;right:0; white-space: nowrap;text-align:center'})
-	var block=$('<span/>',{style:'margin:0 auto;background-color:white;border-radius:2em;padding:2em;cursor:hand'})
+	var block=$('<div/>',{style:'margin:0 auto;background-color:white;border-radius:2em;padding:2em;cursor:hand;display:inline-block'})
 	fauxButton.append(block)
-	block.append($('<span/>',{style:'font-size:3em;'}).text('Start'))
+	block.append($('<span/>',{style:'font-size:3em;'}).html('Start'))
 	block.append($('<span/>',{class:'glyphicon glyphicon-chevron-right', style:'font-size:3em;'}))
+	fauxButton.append($('<br>'))
+	fauxButton.append($('<br>'))
+	fauxButton.append($('<br>'))
+	//block.append($('<span/>',{style:"font-size:1em"}).text("Get ready to BUMBLE!"))
+	fauxButton.append($('<span/>',{style:"font-size:1em"}).html('Made with '+emojis.heart+' for <a href="https://www.facebook.com/groups/killerqueencity/">Killer Queen City</a><br>Twitter:@ktsuttle'))
 	//draftCarousel.parent().append(fauxButton.click(function(){
 	carouselOverlay.append(fauxButton.click(function(){
 		debugger 
@@ -1382,10 +1532,11 @@ $(function(){
 		}
 		window.init=true
 
-		reinitQueue.push(function(){setTimeout(function(){draftCarousel.slick('slickGoTo',draftCarousel.slick('getSlick').slideCount-2 , true)})})//-(5-draftCarousel.slick('getOption','slidesToShow')
+		//reinitQueue.push(function(){setTimeout(function(){draftCarousel.slick('slickGoTo',draftCarousel.slick('getSlick').slideCount-2 , true)})})//-(5-draftCarousel.slick('getOption','slidesToShow')
 		carouselOverlay.fadeOut()
 		kQDraft.draft()
 		setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').removeClass('display-none')})
+		funMessage.text(_.sample(quotes))
 
 		//draftCarousel.find('.slick-next').click()
 		// if(window.init){
@@ -1414,7 +1565,7 @@ $(function(){
 			if(dateSaved && today!=dateSaved){
 				var ans=confirm('Would you like to reset active users weight?')
 				if(ans){
-					queue.resetWeight()
+					queue.setAll('weight',1)
 				}
 			}
 		}
