@@ -1098,10 +1098,10 @@ var isElementInView= function (element, percent) {
 
 var reinitQueue=[]
 var kQDraft=KQDraft()
-var trash,quickJumpTile;
+var trash,quickJumpTile,slickNext;
 $(function(){
 	trash=$('#trash'),quickJumpTile=$('#quickJumpTile');
-	quickJumpTile.children(':first').on('click',function(){
+	quickJumpTile.on('click touchstart',function(){
 		var everyone=$('#everyone')
 		if(!isElementInView(everyone,.80)){
 			$("html, body").animate({ scrollTop: everyone.offset().top }, 300);
@@ -1422,8 +1422,44 @@ $(function(){
 		}
 		//alert(e.type)
 	})
+
+	var attachDraftButton=function(){
+		var draftButton=$('<button id="draft_button" class="btn btn-default" style="width:25%;"><i class="glyphicon glyphicon-random"></i>&nbsp;</button>')
+		$('#carousel-overlay').after($('<div/>',{style:"position:relative;transform:translateY(-100%);text-align: center;margin-top: .25em;"}).append(draftButton))
+
+		draftButton.on('click',function(){
+			debugger
+			kQDraft.draft()
+			//$('.slick-next').click()
+			var slick=draftCarousel.slick('getSlick')
+			var current=slick.slickCurrentSlide()
+			var count = slick.slideCount
+			if(current==count-3){
+				slick.slickNext()
+			}else{
+				slick.slickGoTo(slick.slideCount-2,true)
+			}
+			setTimeout(function(){$('.slick-next').addClass('slick-disabled')})
+
+			draftButton.addClass('disabled spin-icon').find('.glyphicon').removeClass('glyphicon-random').addClass('glyphicon-hourglass')
+			setTimeout(function(){
+			//	if(nextSlide>=slick.slideCount-2){
+					$("#draft_button").removeClass('disabled spin-icon').find('.glyphicon').addClass('glyphicon-random').removeClass('glyphicon-hourglass')
+			//	}else{
+			//		$("#draft_button").addClass('disabled')
+			//	}
+			},5000)
+
+		})
+	}
+
+	draftCarousel.on('breakpoint',function(e){
+		//reattach buttons n stuff
+		//attachDraftButton()
+	})
 	draftCarousel.on('init',function(){
 		setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
+		slickNext=$('.slick-next')
 	})
 	
 	draftCarousel.on('beforeChange', function(event, slick, currentSlide, nextSlide){
@@ -1431,17 +1467,24 @@ $(function(){
 			//setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
 			return
 		}
+		setTimeout(function(){
+			if(nextSlide>=slick.slideCount-2){
+				$('.slick-next').addClass('slick-disabled')
+			}else{
+				$('.slick-next').removeClass('slick-disabled')
+			}
+		})
+
+
+
 		if(nextSlide>=slick.slideCount-1){
 			//alert('draft'+currentSlide+' '+nextSlide+' '+slick.slideCount)
-			kQDraft.draft();
+			//kQDraft.draft();
+			//setTimeout(function(){slick.slickGoTo(slick.slideCount-3,true)})
 		}
 		console.log(currentSlide,nextSlide)
 		funMessage.text(_.sample(quotes))
 	})
-
-	// $('#draft_button').on('click',function(){
-	// 	kQDraft.draft()
-	// })
 
 	draftCarousel.slick({
 		//dots:true,
@@ -1508,8 +1551,23 @@ $(function(){
 
 	// });
 
-	var quotes=[emojis.bee+' all that you can '+emojis.bee,emojis.grapes+' your enemy!','Destory the '+emojis.crown,emojis.snail,emojis.crown,emojis.bee,emojis.grapes]
-
+	var quotes=[
+			,emojis.crown
+			,'Destory the '+emojis.crown
+			,'Royal flush '+emojis.crown+emojis.bee+emojis.grapes
+			,"If you can't "+emojis.bee+"t 'em, "+emojis.grapes+ "'em"
+			,"If you can't "+emojis.bee+"t 'em, "+emojis.snail+ "'em"
+			,emojis.bee
+			,emojis.bee+' all that you can '+emojis.bee
+			,'You are '+emojis.bee+'autiful'
+			,emojis.grapes
+			,emojis.grapes+' your enemy!'
+			,'Hello, '+emojis.grapes+' my old friend'
+			,emojis.snail
+			,'sneaky '+emojis.snail
+			,emojis.snail+' ya later!'
+			,emojis.heart+'Calvin Harris'+emojis.heart
+		]
 	queue.clear()
 	var carouselOverlay=$('#carousel-overlay')
 	//var fauxButton=$('<button/>',{class:'proxy-arrow-next slick-arrow slick-next',type:'button'})
@@ -1537,6 +1595,8 @@ $(function(){
 		kQDraft.draft()
 		setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').removeClass('display-none')})
 		funMessage.text(_.sample(quotes))
+		$('.slick-next').addClass('slick-disabled')
+		attachDraftButton()
 
 		//draftCarousel.find('.slick-next').click()
 		// if(window.init){

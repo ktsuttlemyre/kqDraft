@@ -31,8 +31,8 @@
 	<!--jquery-->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<!--bootstrap-->
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 	<script type="text/javascript" src='https://cdn.rawgit.com/ckknight/random-js/master/lib/random.min.js'></script>
 
@@ -57,6 +57,10 @@
 		window.rwc=module.exports
 	</script>
 <style type="text/css">
+.disabled{
+	pointer-events: none !important;
+}
+
 .disable-select {
   -webkit-user-select: none;  
   -moz-user-select: none;    
@@ -169,6 +173,50 @@
 	}
 </style>
 <style>
+
+.spin-icon .glyphicon {
+	display: inline-block;
+  -webkit-animation: spin 2s infinite linear;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+
 #carousel-container{
 	margin: 0;
 	padding: 0;
@@ -270,6 +318,9 @@
 		color:black;
 		overflow: hidden;
 		/*width: 25%;*/
+	}
+	.draggable:last-child{
+		margin-bottom:1.5em;
 	}
 	.teams .drone{
 		display: block;
@@ -400,6 +451,14 @@
 		color: white;
 	}
 
+	/*make slick disabled have no cursor events*/
+	.slick-disabled{
+		pointer-events: none !important;
+		opacity: .50 !important;
+	}
+	.slick-arrow.slick-disabled:before{
+		opacity: .25 !important;
+	}
 	.slick-slide .team{
 		height: 100%;
 
@@ -508,15 +567,12 @@
 .display-none{
 	display: none !important;
 }
-	.slick-disabled{
-		 pointer-events: auto !important;
-		 opacity: 1 !important;
-	}
+
 	.slick-slide{
 		background: white;
 		margin: 0;
 		/*opacity: .3;*/
-		min-height: 28em;/* 25em will get all draft inputs but i want room for win data entry*/
+		min-height: 30em;/* 25em will get all draft inputs but i want room for win data entry*/
 		max-height: 60%;
 		transition:all 300ms ease;
 		padding: .5em;
@@ -899,7 +955,6 @@ font-size: 2.5em;
 	</div>
 	<div class="row" style=''>
 		<div class="col-lg-10 draft-row">
-			<!--<button id='draft_button' class="btn btn-default"><i class="glyphicon glyphicon-random"></i>&nbsp;</button>-->
 			<div id='carousel-container'>
 				<div id='draftCarousel'>
 					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
@@ -907,7 +962,6 @@ font-size: 2.5em;
 					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
 				</div>
 				<div id='carousel-overlay' style="position:absolute;top:0;left:0;right:0;bottom:0"></div>
-				<div id='fun_message' style='text-align: center'></div>
 			</div>
 		</div>
 		<div class="col-lg-2" id='everyone' class=''>
