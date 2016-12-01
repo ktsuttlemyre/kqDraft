@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
+	<script>window.onerror = function(msg, url, linenumber) {
+	alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+	return true;
+	}</script>
+	<title>KQDraft</title>
 	<!--////////////////////////
 	           humans.txt   
 
@@ -27,12 +32,11 @@
 	 <!-- Remove Tap Highlight on Windows Phone IE -->
 	<meta name="msapplication-tap-highlight" content="no"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="Content-Language" content="en">
 	<!--jquery-->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<!--bootstrap-->
-	<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
 	<script type="text/javascript" src='https://cdn.rawgit.com/ckknight/random-js/master/lib/random.min.js'></script>
 
@@ -57,6 +61,15 @@
 		window.rwc=module.exports
 	</script>
 <style type="text/css">
+.parenthetical{
+	border: 2px solid #555;
+	border-radius:20%;
+	border-top-width: 0;
+	border-bottom-width: 0;
+	padding: .10em .20em .10em .10em;
+	margin: 0 !important;
+	background-color: Lavender;
+}
 .disabled{
 	pointer-events: none !important;
 }
@@ -286,7 +299,7 @@
 		border-radius: 0 1em 1em 0;
 	}
 	.blueTeam:before{
-		content: 'Blue';
+		content: "Blue";
 		font-size:1.1em;
 		font-weight: bold;
 		color:white;
@@ -296,7 +309,7 @@
 		background: gold;
 	}
 	.goldTeam:before{
-		content: 'Gold';
+		content: "Gold";
 		font-size:1.1em;
 		font-weight: bold;
 	}
@@ -307,11 +320,16 @@
 	.queen{
 		background: #000;
 		display: block;
+		overflow: hidden;
 	}
+
 	.queen:before{
-		display: none;
+		display: block;
 		content:"\1F451";
-		float:right;
+		position: absolute;
+		font-size: 3em;
+		right:-.25em;top:-50%;
+		opacity: .5;
 	}
 	.drone{
 		background: #CCC;
@@ -327,11 +345,17 @@
 		float: none;
 		width: auto;
 	}
+	.teams .tag-text{
+		position: relative;
+	}
 	
 	.teams .drone:before{
-		display: none;
+		display: block;
 		content: "\1F41D";
-		float:right;
+		position: absolute;
+		font-size: 3em;
+		right:-.25em;top:-25%;
+		opacity: .5;
 	}
 
 	.goldTeam .drone{
@@ -519,7 +543,7 @@
 		position: relative;
 		z-index:1;
 		float: right;
-		margin:0em .4em;
+		margin:0em .4em 0 .1em;
 	}
 	.metric:before{
 		position: absolute;
@@ -527,8 +551,14 @@
 		z-index:-1;
 	}
 
+	.player .weight{
+		background-color: #CCC;
+		border-top-right-radius:.4em;
+		border-top-left-radius: .4em;
+		color: #777;
+	}
 	.player .weight:before{
-		content: "\1F340";
+		/*content: "\1F340";*/
 	}
 
 	.player .wins:before{
@@ -801,7 +831,7 @@ font-size: 2.5em;
 			font-size:1.2em ;
 		}
 		.player{
-			width:48%;
+			width:45%;
 			float:left;
 		}
 		#everyone{
@@ -892,19 +922,19 @@ font-size: 2.5em;
 			<div class="input-group">
 				<div id='optimizationTech' class="btn-group " data-toggle="buttons">
 					<label class="btn btn-default">
-						<input type="radio" name="optimize" autocomplete="off"  value='droneOnly'>[&#x1F41D;&nbsp;]
+						<input type="radio" name="optimize" value='droneOnly'><span class='parenthetical'>&#x1F41D;</span>
 					</label>
 					<label class="btn btn-default active">
-						<input type="radio" name="optimize" autocomplete="off" checked value='drone'>&#x1F41D;
+						<input type="radio" name="optimize" checked value='drone'>&#x1F41D;
 					</label>
 <!-- 					<label class="btn btn-default active">
-						<input type="radio" name="optimize" autocomplete="off" checked value='play'>&#x1F3AE;
+						<input type="radio" name="optimize" checked value='play'>&#x1F3AE;
 					</label> -->
 					<label class="btn btn-default">
-						<input type="radio" name="optimize" autocomplete="off" value='queen'>&#x1F451;
+						<input type="radio" name="optimize" value='queen'>&#x1F451;
 					</label>
 					<label class="btn btn-default" ><!--style="border-top-right-radius:0;border-bottom-right-radius:0"-->
-						<input type="radio" name="optimize" autocomplete="off" value='queenOnly'>[&#x1F451;&nbsp;]
+						<input type="radio" name="optimize" value='queenOnly'><span class='parenthetical'>&#x1F451;</span>
 					</label>
 				</div>
 
@@ -957,14 +987,14 @@ font-size: 2.5em;
 		<div class="col-lg-10 draft-row">
 			<div id='carousel-container'>
 				<div id='draftCarousel'>
-					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
-					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
-					<div class='visiblity-hidden' width='10px' style="width:10px;"></div>
+					<div class='visiblity-hidden' style="width:10px;"></div>
+					<div class='visiblity-hidden' style="width:10px;"></div>
+					<div class='visiblity-hidden' style="width:10px;"></div>
 				</div>
 				<div id='carousel-overlay' style="position:absolute;top:0;left:0;right:0;bottom:0"></div>
 			</div>
 		</div>
-		<div class="col-lg-2" id='everyone' class=''>
+		<div class="col-lg-2" id='everyone'>
 			<!--<div style='position: absolute;top:0;right:0;'>
 				<div id='trash' class='trash' style="position:relative">
 					<span class="tag label draggable no-drag">
@@ -972,7 +1002,7 @@ font-size: 2.5em;
 					</span>
 				</div>
 			</div>-->
-			<div class="" id='everyone-list' class='' style=""></div>
+			<div class="" id='everyone-list' style=""></div>
 		</div>
 	</div>
 	<!--<div class="row">

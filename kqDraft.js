@@ -54,7 +54,7 @@ function launchFullScreen(element) {
 })(jQuery);
  
 
-	var weightIncrement=2
+	var weightIncrement=1
 
 	var counter=0;
 	var uniqueID=function(){
@@ -544,11 +544,11 @@ function launchFullScreen(element) {
 		return (total/length)||0;
 	}
 
-	var QKQueue=function(){
-		if(!(this instanceof QKQueue)){return new QKQueue()}
+	var KQQueue=function(){
+		if(!(this instanceof KQQueue)){return new KQQueue()}
 		this.q=[]
 	}
-	QKQueue.prototype.add=function(players){ //TODO normalize outliers each time and bring their weights to the middle each time new people are added
+	KQQueue.prototype.add=function(players){ //TODO normalize outliers each time and bring their weights to the middle each time new people are added
 		if(!Array.isArray(players)){
 			players=[players]
 		}
@@ -571,8 +571,16 @@ function launchFullScreen(element) {
 			return 
 		}
 		var analysis=this.analyze()
-		var min=Math.ceil(analysis.min),max=Math.floor(analysis.max);
-		var startWeight=Math.floor((min+analysis.average)/3)||1
+		
+		var min=1
+		if(this.q.length){
+			min=Math.ceil(this.q.reduce(function(prev, curr) {
+				return prev.weight < curr.weight ? prev : curr;
+			}).weight)
+		}
+		// var calc=(analysis.average-min)/3 //delta div by 3
+		// var startWeight=Math.floor((min+calc))||1
+		var startWeight=min||1
 		_.forEach(players,_.bind(function(player){
 			if(player.weight==null){
 				player.weight=startWeight
@@ -582,7 +590,7 @@ function launchFullScreen(element) {
 		this.draw()
 		return analysis;
 	}
-	QKQueue.prototype.remove=function(playerIDs){
+	KQQueue.prototype.remove=function(playerIDs){
 		debugger
 		if(!Array.isArray(playerIDs)){
 			playerIDs=[playerIDs]
@@ -595,19 +603,19 @@ function launchFullScreen(element) {
 		this.draw()
 		return analysis;
 	}
-	QKQueue.prototype.clear=function(){
+	KQQueue.prototype.clear=function(){
 		while(this.q.length){
 			this.q.pop()
 		}
 		this.draw()
 	}
-	QKQueue.prototype.setAll=function(attr,val){
+	KQQueue.prototype.setAll=function(attr,val){
 		for(var i=0,l=this.q.length;i<l;i++){
 			this.q[i][attr]=val;
 		}
 		this.draw()
 	}
-	QKQueue.prototype.analyze=function(){
+	KQQueue.prototype.analyze=function(){
 		clamp=true //force clamping always for now
 		var partition=partitionOutliers(this.q,'weight')
 		var startWeight=Math.floor(average(partition.inliers||[],'weight')||1);
@@ -634,6 +642,7 @@ function launchFullScreen(element) {
 	var dataToPlayerDiv=function(player){
 		var div=$('<div/>',{class:'player draggable',id:'id_'+uniqueID()+'_'+player.id})
 		div.append($('<span/>',{class:'name'}).text(player.name))
+		var optimizeSpan=$('<span/>',{class:'metric optimize'})
 		var optimize=emojis.controller;
 		switch(player.optimize){
 			case 'queen':
@@ -643,10 +652,12 @@ function launchFullScreen(element) {
 				optimize=emojis.bee;
 				break;
 			case 'queenOnly':
-				optimize='['+emojis.crown+' ]';
+				optimize=emojis.crown;
+				optimizeSpan.addClass('parenthetical')
 				break;
 			case 'droneOnly':
-				optimize='['+emojis.bee+' ]';
+				optimize=emojis.bee;
+				optimizeSpan.addClass('parenthetical')
 				break;
 		}
 
@@ -656,12 +667,12 @@ function launchFullScreen(element) {
 		//		queue.remove(id)
 		//	}))
 		div.append($('<span/>',{class:'metric weight'}).text(player.weight==null?'_ ':player.weight))
-		div.append($('<span/>',{class:'metric optimize'}).text(optimize==null?'_ ':optimize))
+		div.append(optimizeSpan.text(optimize==null?'_ ':optimize))
 		div.append($('<span/>',{class:'metric turns'}).text(player.turns==null?'_ ':player.turns))
 		//div.append($('<span/>',{class:'metric wins'}).text(player.weight))
 		return div
 	}
-	QKQueue.prototype.draw=function(id){
+	KQQueue.prototype.draw=function(id){
 		if(!id){
 			id='#everyone-list'
 		}
@@ -778,21 +789,26 @@ function launchFullScreen(element) {
 	}
 
 	var onDeck=function(queue,number){
+		var weightMultiplier=1;
 		//set a tmp weighted order
 		queue=queue.slice()
 		var tmp=[],weightedHash={};
-		var list=queue.filter(function(o){return o.weight!=null}).map(function(o){return o.weight})
+		var list=queue.filter(function(o){
+			if(o.weight==null){
+				o.weight=1;
+			}
+			return o.weight!=null
+		}).map(function(o){return o.weight})
 		debugger
-		var maxWeight=Math.max.apply(Math,list)
+		var maxWeight=Math.max.apply(Math,list)*weightMultiplier
+		//var minWeight=Math.min.apply(Math,list)
 
 		_.forEach(queue,function(obj){
-			
-			weightedHash[obj.id]=maxWeight-(obj.weight-1)
-
+			weightedHash[obj.id]=((maxWeight+1)-(obj.weight*weightMultiplier)) //plus one ensures that there will always be 1 for weight
 		})
 		debugger
 		for(var i=0,l=queue.length;i<l;i++){
-			var id=rwc.select(weightedHash,null,uniformRandom0to1Ex)//choose players
+			var id=rwc.select(weightedHash,null,{rand:uniformRandom0to1Ex})//choose players
 			//tmp.push(_.find(queue,{id:id}))[0] //get the object
 			tmp.push(_.remove(queue,{id:id})[0]) //get the object and remove it
 			delete weightedHash[id]
@@ -827,7 +843,7 @@ function launchFullScreen(element) {
 			type=1
 		}
 		var tag=$('<span/>',{class:'tag draggable '+cssClass,'data-sort':type+'-'+name,id:'id_'+uniqueID()+'_'+obj.id})
-		tag.append($('<span/>').text(name))
+		tag.append($('<span/>',{class:'tag-text'}).text(name))
 		//tag.append($('<a/>').append($('<i/>',{class:'remove glyphicon glyphicon-remove-sign glyphicon-white'})))
 		return tag
 	}
@@ -840,12 +856,10 @@ function launchFullScreen(element) {
 	
 
 	KQDraft.prototype.draft=function(number){
-		// if(!this.draftIndex){
-		// 	console.log(draftCarousel.slick('getSlick'))
-		// 		//alert(draftCarousel.slick('getSlick').slideCount)
-
-
-		// }
+		if(queue.q.length<4){
+			alert('Please add at least 4 people')
+			return null
+		}
 	
 	var div=$('<div/>')
 	// var container=$('<div class="container-fluid">'+
@@ -1038,6 +1052,7 @@ function launchFullScreen(element) {
 	draftCarousel.slick('slickAdd',div[0],null);
 
 	queue.draw()
+	return draft
 
 	}
 
@@ -1057,7 +1072,7 @@ function isElement(o){
 );
 }
 
-var queue=new QKQueue();
+var queue=new KQQueue();
 //queue.add(database)
 var draftCarousel;
 var getData=function(item){
@@ -1097,7 +1112,7 @@ var isElementInView= function (element, percent) {
 
 
 var reinitQueue=[]
-var kQDraft=KQDraft()
+window.kQDraft=KQDraft()
 var trash,quickJumpTile,slickNext;
 $(function(){
 	trash=$('#trash'),quickJumpTile=$('#quickJumpTile');
@@ -1344,35 +1359,65 @@ $(function(){
 	autoLock && everyoneList.addClass('no-drag')
 
 	var commandHandler=function(name){
-		var cmd=name.toUpperCase().replace(/\s+/g, '');
-		if(cmd=='DEMO'||cmd=='DEMODATA'){
-			queue.add(database)
-			return 1
-		}else if(cmd=='CLEAR'){
-			queue.clear()
-			return 1
-		}else if(cmd=='RESETTURNS'){
-			alert()
-			queue.setAll('turns',0)
-			return 1
-		}else if(cmd=='RESETWEIGHT'){
-			queue.setAll('weight',1)
-			return 1
-		}else if(cmd=='SAVE'||cmd=='SAVESTATE'){
-			window.saveState()
-			return 1
-		}else if(cmd=='LOAD'||cmd=='LOADSTATE'){
-			window.loadState()
-			return 1
-		}else if(cmd=='FULLSCREEN'){
-			// Launch fullscreen for browsers that support it!
-			launchFullScreen(document.documentElement); // the whole page
+		var argStart= name.indexOf(':'),args='',cmd=name
+		if(argStart!=-1){
+			args=name.substring(argStart+1,name.length);
+			cmd=name.substring(0,argStart)
 		}
+		cmd=cmd.toUpperCase().replace(/\s+/g, '');
+		console.log(cmd,args)
+
+		switch(cmd){
+			case 'DEMO':
+			case 'DEMODATA':
+				queue.add(database)
+				return 1
+			case 'DRAFT':
+				if(args){
+					args=parseFloat(args)
+					while(args){
+						setTimeout(function(){kQDraft.draft()})
+						args--
+					}
+					return 1
+				}
+				kQDraft.draft()
+				return 1
+			case 'REFRESH':
+				window.location.reload&&window.location.reload()
+				window.location=window.location
+				return 1
+			case 'CLEAR':
+				queue.clear()
+				return 1
+			case 'RESETTURNS':
+				queue.setAll('turns',0)
+				return 1
+			case 'RESETWEIGHT':
+				queue.setAll('weight',1)
+				return 1
+			case 'RESETALL':
+				commandHandler('resetTurns')
+				commandHandler('resetWeight')
+				return 1
+			case 'SAVE':
+			case 'SAVESTATE':
+				window.saveState()
+				return 1
+			case 'LOAD':
+			case 'LOADSTATE':
+				window.loadState()
+				return 1
+			case 'FULLSCREEN':
+				// Launch fullscreen for browsers that support it!
+				launchFullScreen(document.documentElement); // the whole page
+			}
 		return 0
 	}
 
 	$('#addUser').submit(function(ev) {
-		setTimeout(function(){$('#userName').focus()})
+		//do not focus on input again after submit it makes it hard to use on smaller mobile devices with on screen keyboards
+		//setTimeout(function(){$('#userName').focus()})
 		ev.preventDefault(); // to stop the form from submitting
 		debugger
 		var form=$(this)
@@ -1423,13 +1468,31 @@ $(function(){
 		//alert(e.type)
 	})
 
-	var attachDraftButton=function(){
-		var draftButton=$('<button id="draft_button" class="btn btn-default" style="width:25%;"><i class="glyphicon glyphicon-random"></i>&nbsp;</button>')
-		$('#carousel-overlay').after($('<div/>',{style:"position:relative;transform:translateY(-100%);text-align: center;margin-top: .25em;"}).append(draftButton))
-
-		draftButton.on('click',function(){
+	var draftButtonAction=function(){
 			debugger
-			kQDraft.draft()
+			var draft=kQDraft.draft()
+			if(!draft){
+				return
+			}
+			if(window.init!=true){
+				window.init=true
+
+				//reinitQueue.push(function(){setTimeout(function(){draftCarousel.slick('slickGoTo',draftCarousel.slick('getSlick').slideCount-2 , true)})})//-(5-draftCarousel.slick('getOption','slidesToShow')
+				carouselOverlay.fadeOut()
+				setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').removeClass('display-none')})
+				$('.slick-next').addClass('slick-disabled')
+				attachDraftButton()
+
+				//draftCarousel.find('.slick-next').click()
+				// if(window.init){
+				// 	fauxButton.detach()
+				// }else{
+				// 	kQDraft.draft();
+				// }
+			}
+
+			funMessage.text(_.sample(quotes))
+
 			//$('.slick-next').click()
 			var slick=draftCarousel.slick('getSlick')
 			var current=slick.slickCurrentSlide()
@@ -1450,12 +1513,20 @@ $(function(){
 			//	}
 			},5000)
 
-		})
+		}
+	var draftButton;
+	var attachDraftButton=function(){
+		draftButton=$('<button id="draft_button" class="btn btn-default" style="width:25%;"><i class="glyphicon glyphicon-random"></i>&nbsp;</button>')
+		$('#carousel-overlay').after($('<div/>',{style:"position:relative;transform:translateY(-100%);text-align: center;margin-top: .25em;"}).append(draftButton))
+
+		draftButton.on('click',draftButtonAction)
 	}
 
 	draftCarousel.on('breakpoint',function(e){
 		//reattach buttons n stuff
 		//attachDraftButton()
+		var slick=draftCarousel.slick('getSlick')
+		setTimeout(function(){slick.slickGoTo(slick.slideCount-2,true)})
 	})
 	draftCarousel.on('init',function(){
 		setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
@@ -1582,29 +1653,8 @@ $(function(){
 	//block.append($('<span/>',{style:"font-size:1em"}).text("Get ready to BUMBLE!"))
 	fauxButton.append($('<span/>',{style:"font-size:1em"}).html('Made with '+emojis.heart+' for <a href="https://www.facebook.com/groups/killerqueencity/">Killer Queen City</a><br>Twitter:@ktsuttle'))
 	//draftCarousel.parent().append(fauxButton.click(function(){
-	carouselOverlay.append(fauxButton.click(function(){
-		debugger 
-		if(queue.q.length<4){
-			alert('Please add at least 4 people')
-			return
-		}
-		window.init=true
-
-		//reinitQueue.push(function(){setTimeout(function(){draftCarousel.slick('slickGoTo',draftCarousel.slick('getSlick').slideCount-2 , true)})})//-(5-draftCarousel.slick('getOption','slidesToShow')
-		carouselOverlay.fadeOut()
-		kQDraft.draft()
-		setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').removeClass('display-none')})
-		funMessage.text(_.sample(quotes))
-		$('.slick-next').addClass('slick-disabled')
-		attachDraftButton()
-
-		//draftCarousel.find('.slick-next').click()
-		// if(window.init){
-		// 	fauxButton.detach()
-		// }else{
-		// 	kQDraft.draft();
-		// }
-	}))
+	carouselOverlay.append(fauxButton)
+	block.click(draftButtonAction)
 	// draftCarousel.parent().append($('<button/>',{class:'proxy-arrow-prev slick-arrow slick-prev',type:'button'}).click(function(){
 	// 	//$('#draftCarousel .slick-prev').click()
 	// 	if(window.init){
@@ -1635,6 +1685,19 @@ $(function(){
 		setTimeout(function(){$('#userName').focus()})
 	})
 })
+
+
+
+
+// Push.create("Hello world!", {
+//     body: "How's it hangin'?",
+//     icon: 'icon.png',
+//     timeout: 4000,
+//     onClick: function () {
+//         window.focus();
+//         this.close();
+//     }
+// });
 
 // _.forEach(_.sample(toPlay,5),function(obj) {
 // 	console.log(obj.name)
