@@ -789,6 +789,8 @@ function launchFullScreen(element) {
 	}
 
 	var onDeck=function(queue,number){
+		debugger
+		var increasePercent=.2 //this will increase all numbers by this percent. the idea is to skew the weights so lower turn players get more chances
 		var weightMultiplier=1;
 		//set a tmp weighted order
 		queue=queue.slice()
@@ -799,14 +801,14 @@ function launchFullScreen(element) {
 			}
 			return o.weight!=null
 		}).map(function(o){return o.weight})
-		debugger
+
 		var maxWeight=Math.max.apply(Math,list)*weightMultiplier
 		//var minWeight=Math.min.apply(Math,list)
 
 		_.forEach(queue,function(obj){
 			weightedHash[obj.id]=((maxWeight+1)-(obj.weight*weightMultiplier)) //plus one ensures that there will always be 1 for weight
 		})
-		debugger
+
 		for(var i=0,l=queue.length;i<l;i++){
 			var id=rwc.select(weightedHash,null,{rand:uniformRandom0to1Ex})//choose players
 			//tmp.push(_.find(queue,{id:id}))[0] //get the object
@@ -1468,7 +1470,7 @@ $(function(){
 		//alert(e.type)
 	})
 
-	var draftButtonAction=function(){
+	var draftButtonAction=function(e){
 			debugger
 			var draft=kQDraft.draft()
 			if(!draft){
@@ -1480,7 +1482,6 @@ $(function(){
 				//reinitQueue.push(function(){setTimeout(function(){draftCarousel.slick('slickGoTo',draftCarousel.slick('getSlick').slideCount-2 , true)})})//-(5-draftCarousel.slick('getOption','slidesToShow')
 				carouselOverlay.fadeOut()
 				setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').removeClass('display-none')})
-				$('.slick-next').addClass('slick-disabled')
 				attachDraftButton()
 
 				//draftCarousel.find('.slick-next').click()
@@ -1497,12 +1498,23 @@ $(function(){
 			var slick=draftCarousel.slick('getSlick')
 			var current=slick.slickCurrentSlide()
 			var count = slick.slideCount
-			if(current==count-3){
-				slick.slickNext()
-			}else{
-				slick.slickGoTo(slick.slideCount-2,true)
-			}
-			setTimeout(function(){$('.slick-next').addClass('slick-disabled')})
+
+			var slidesToShow=slick.slickGetOption('slidesToShow')
+			var offset=(slick.slickGetOption('centerMode'))?(Math.ceil(slidesToShow/2)):slidesToShow;
+
+			var next=(slick.slideCount-offset)
+			
+			//setTimeout(function(){
+				//if(current==count-offset){
+				//	slick.slickNext()
+				//}else{
+					//$('.slick-next').click()
+					//slick.slickNext()
+					afterChangePromises.push(function(){slick.slickGoTo(next)})
+				//}
+			//})
+
+			//setTimeout(function(){$('.slick-next').addClass('slick-disabled')})
 
 			draftButton.addClass('disabled spin-icon').find('.glyphicon').removeClass('glyphicon-random').addClass('glyphicon-hourglass')
 			setTimeout(function(){
@@ -1512,8 +1524,17 @@ $(function(){
 			//		$("#draft_button").addClass('disabled')
 			//	}
 			},5000)
+			
+			if(slick.slickGetOption('centerMode')){
+				var newE=$.extend({},e)
+				newE.type='afterChange'
+				draftCarousel.trigger(newE,slick,current)
+			}
+			
+
 
 		}
+	var afterChangePromises=[]
 	var draftButton;
 	var attachDraftButton=function(){
 		draftButton=$('<button id="draft_button" class="btn btn-default" style="width:25%;"><i class="glyphicon glyphicon-random"></i>&nbsp;</button>')
@@ -1533,27 +1554,29 @@ $(function(){
 		slickNext=$('.slick-next')
 	})
 	
-	draftCarousel.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+	draftCarousel.on('afterChange', function(event, slick, currentSlide){
 		if(!window.init){
 			//setTimeout(function(){draftCarousel.find('.slick-next, .slick-prev').addClass('display-none')})
 			return
 		}
-		setTimeout(function(){
-			if(nextSlide>=slick.slideCount-2){
-				$('.slick-next').addClass('slick-disabled')
-			}else{
-				$('.slick-next').removeClass('slick-disabled')
+		if(afterChangePromises.length){
+			while(afterChangePromises.length){
+				var fn=afterChangePromises.shift()
+				setTimeout(fn)
 			}
-		})
-
-
-
-		if(nextSlide>=slick.slideCount-1){
-			//alert('draft'+currentSlide+' '+nextSlide+' '+slick.slideCount)
-			//kQDraft.draft();
-			//setTimeout(function(){slick.slickGoTo(slick.slideCount-3,true)})
+		}else{
+			//setTimeout(function(){
+				var slidesToShow=slick.slickGetOption('slidesToShow')
+				var offset=(slick.slickGetOption('centerMode'))?(Math.ceil(slidesToShow/2)):slidesToShow;
+				if(currentSlide>=slick.slideCount-offset){
+					$('.slick-next').addClass('slick-disabled')
+				}else{
+					$('.slick-next').removeClass('slick-disabled')
+				}
+			//})
 		}
-		console.log(currentSlide,nextSlide)
+
+
 		funMessage.text(_.sample(quotes))
 	})
 
@@ -1583,7 +1606,7 @@ $(function(){
 				adaptiveHeight:true,
 				centerPadding: '0px',
 				slidesToShow: 2,
-				infinite:true,
+				infinite:false,
 				}
 		 	}
 			// ,{
