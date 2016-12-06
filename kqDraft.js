@@ -57,8 +57,8 @@ function launchFullScreen(element) {
 	var weightIncrement=1
 
 	var counter=0;
-	var uniqueID=function(){
-		return counter++
+	var uniqueID=function(prefix){
+		return prefix+counter++
 	}
 	var trashSortable=null
 	var queueSortable=null
@@ -467,6 +467,26 @@ function launchFullScreen(element) {
 		}
 	 }
 
+
+
+	var scale = function(num, minA, maxA, minB, maxB, delta0Default){
+		var oldRange=maxA - minA
+		if (oldRange == 0){
+			if(delta0Default=='MIN'){
+ 				return minB
+			}else if(delta0Default=='MAX'){
+				return maxB
+			}else{
+				return (minB + maxB) / 2
+			}
+		}
+		return (
+				/*to range*/	  (maxB - minB)
+				/*scale fator*/	* (num - minA))
+				/*from range*/	/ (oldRange)
+				/*normalize*/	+  minB
+		}
+
 	//http://stackoverflow.com/questions/20811131/javascript-remove-outlier-from-an-array
 	//http://mathworld.wolfram.com/Outlier.html
 	//https://www.dataz.io/display/Public/2013/03/20/Describing+Data%3A+Why+median+and+IQR+are+often+better+than+mean+and+standard+deviation
@@ -640,7 +660,7 @@ function launchFullScreen(element) {
 		,heart:String.fromCharCode(0x2764,0xFE0F)
 	}
 	var dataToPlayerDiv=function(player){
-		var div=$('<div/>',{class:'player draggable',id:'id_'+uniqueID()+'_'+player.id})
+		var div=$('<div/>',{class:'player draggable',id:'id_'+player.id,'data-id':player.id})
 		div.append($('<span/>',{class:'name'}).text(player.name))
 		var optimizeSpan=$('<span/>',{class:'metric optimize'})
 		var optimize=emojis.controller;
@@ -788,9 +808,10 @@ function launchFullScreen(element) {
 		window.rwc=module.export||module.exports;
 	}
 
+	window.curve=.4 //this will increase all numbers by this percent. the idea is to skew the weights so lower turn players get more chances
 	var onDeck=function(queue,number){
 		debugger
-		var increasePercent=.2 //this will increase all numbers by this percent. the idea is to skew the weights so lower turn players get more chances
+		
 		var weightMultiplier=1;
 		//set a tmp weighted order
 		queue=queue.slice()
@@ -803,14 +824,53 @@ function launchFullScreen(element) {
 		}).map(function(o){return o.weight})
 
 		var maxWeight=Math.max.apply(Math,list)*weightMultiplier
-		//var minWeight=Math.min.apply(Math,list)
+		var minWeight=Math.min.apply(Math,list)
+		var sum=0
 
 		_.forEach(queue,function(obj){
-			weightedHash[obj.id]=((maxWeight+1)-(obj.weight*weightMultiplier)) //plus one ensures that there will always be 1 for weight
+			var val = scale(obj.weight,minWeight,maxWeight,1,100)//turn to percent first
+			if(val){ //if it isn't 0 then turn to decimal and invert
+				val=val/100
+				val=1-val //invert the percent
+			}
+
+			//var val = ((maxWeight+1)-(obj.weight*weightMultiplier)) //plus one ensures that there will always be 1 for weight
+
+			if(val<0){
+				alert('no 0 allowed')
+			}
+			if(curve){ //larger numbers get chosen less
+				val=Math.min(val+(val*curve),1)
+			}
+			weightedHash[obj.id]=val;
+			sum+=val
 		})
+		if(!sum){//if sum == 0
+			alert('sum ==0 :/')
+		}
+		var fudge=.001
+		_.forEach(weightedHash,function(val,id){
+			if(!val&&!sum){
+				weightedHash[id]=fudge;
+			}
+			weightedHash[id]=(val/sum)+fudge //fudge number so the values are >=1
+		})
+		var total=0;
+		while(!(total>=1)){
+			total=0;
+			_.forEach(weightedHash,function(val,id){
+				total+=val
+			})
+			if(!(total>=1)){
+				_.forEach(weightedHash,function(val,id){
+					weightedHash[id]=val+fudge
+				})
+			}
+		}
+		console.log('weighted total',total)
 
 		for(var i=0,l=queue.length;i<l;i++){
-			var id=rwc.select(weightedHash,null,{rand:uniformRandom0to1Ex})//choose players
+			var id=rwc.select(weightedHash,null,{rand:uniformRandom0to1Ex,normal:false})//choose players
 			//tmp.push(_.find(queue,{id:id}))[0] //get the object
 			tmp.push(_.remove(queue,{id:id})[0]) //get the object and remove it
 			delete weightedHash[id]
@@ -844,7 +904,7 @@ function launchFullScreen(element) {
 		if(cssClass=='drone'){
 			type=1
 		}
-		var tag=$('<span/>',{class:'tag draggable '+cssClass,'data-sort':type+'-'+name,id:'id_'+uniqueID()+'_'+obj.id})
+		var tag=$('<span/>',{class:'tag draggable '+cssClass,'data-sort':type+'-'+name,id:'id_'+obj.id+'_'+uniqueID(),'data-id':obj.id})
 		tag.append($('<span/>',{class:'tag-text'}).text(name))
 		//tag.append($('<a/>').append($('<i/>',{class:'remove glyphicon glyphicon-remove-sign glyphicon-white'})))
 		return tag
@@ -934,6 +994,7 @@ function launchFullScreen(element) {
 					if(to.el.id.split('_')[0]==from.el.id.split('_')[0]){
 						return true
 					}
+
 					//if(to.options.group.name==from.options.group.name && to.el.children.length<5){
 					//	return true
 					//}
@@ -972,6 +1033,8 @@ function launchFullScreen(element) {
 			console.log('added',e)
 			var item=$(e.item)
 			var to = $(e.to)
+			var id=getID(item)
+
 
 			if(to.hasClass('team')&& to.children().length==1){ //adding from draft to a team
 				//turn the first add into a queen if they are not already
@@ -984,6 +1047,14 @@ function launchFullScreen(element) {
 			}else if($(e.from).attr('id')=='everyone-list'){ //adding from active to draft
 				var data = getData(e.item)
 				if(data){
+					//to.children("[data-id='" +id + "']").length>=2||
+					if(to.parents('.slick-slide').find("[data-id='" +id + "']").length >=2 ){ //player is already drafted silly
+						alert('player is already drafted silly')
+						item.detach()
+						queue.draw()
+						drawHighlights()
+						return
+					}
 					var elem=tag(data,'drone')
 					//elem.css('display','inline-block')
 					elem.addClass('col-xs-5')
@@ -992,6 +1063,7 @@ function launchFullScreen(element) {
 					data.weight+=weightIncrement
 					data.turns++
 					queue.draw()
+					drawHighlights()
 				}else{
 					$(e.from).append($(e.item).detach())
 				}
@@ -1054,6 +1126,7 @@ function launchFullScreen(element) {
 	draftCarousel.slick('slickAdd',div[0],null);
 
 	queue.draw()
+	drawHighlights()
 	return draft
 
 	}
@@ -1077,20 +1150,24 @@ function isElement(o){
 var queue=new KQQueue();
 //queue.add(database)
 var draftCarousel;
-var getData=function(item){
+var getID=function(item){
 	var id;
 	if(isNode(item)){
-		id=(item.id||'').split('_')[2]
+		id=(item.id||'').split('_')[1]
 	}
 	if(!id){
 		if(item instanceof $){
-		 	id=(item.attr('id')||'').split('_')[2]
+		 	id=(item.attr('id')||'').split('_')[1]
 		}else if(typeof item== 'string'){
 			id=item
 		}else{
 			throw "can't get data for "+item
 		}
 	}
+	return id
+}
+var getData=function(item){
+	var id=getID(item)
 	return _.find(queue.q,{id:id})
 }
 
@@ -1112,10 +1189,17 @@ var isElementInView= function (element, percent) {
         }
     }
 
+$(document).on('scroll',_.throttle(function(e){
+	var active=(document.activeElement||$(":focus"))
+	if(!isElementInView(active,.1)){
+		active.blur()
+	}
+},300))
+
 
 var reinitQueue=[]
 window.kQDraft=KQDraft()
-var trash,quickJumpTile,slickNext;
+var trash,quickJumpTile,slickNext,drawHighlights;
 $(function(){
 	trash=$('#trash'),quickJumpTile=$('#quickJumpTile');
 	quickJumpTile.on('click touchstart',function(){
@@ -1186,8 +1270,10 @@ $(function(){
 				data.turns--
 				queue.remove(data.id)
 				queue.draw()
+				drawHighlights()
 			}else{ //undo
-				$(e.from).append(item.detach())
+				//$(e.from).append(
+				item.detach()
 			}
 		 }
 	}
@@ -1273,8 +1359,9 @@ $(function(){
 				// })
 
 				queue.draw()
+				drawHighlights()
 			}else{ //undo
-				$(e.from).append(item.detach())
+				item.detach()
 			}
 		 },onChoose:function(){
 		 	trash.fadeIn()
@@ -1385,8 +1472,15 @@ $(function(){
 				}
 				kQDraft.draft()
 				return 1
+			case 'CURVE':
+				if(args){
+					window.curve=parseFloat(args)
+				}else{
+					alert(window.curve)
+				}
+				return 1
 			case 'REFRESH':
-				window.location.reload&&window.location.reload()
+				window.location.reload&&window.location.reload(true); //hard reload
 				window.location=window.location
 				return 1
 			case 'CLEAR':
@@ -1435,11 +1529,13 @@ $(function(){
 		}
 		if(commandHandler(name)){
 			queue.draw()
+			drawHighlights()
 			return 
 		}
-		var player={id:Date.now().toString(),name:name,optimize:optimize,turns:0,history:{games:0,asQueen:0,asDrone:0}}
-		queue.add(player)
-
+		var player={id:uniqueID('player').toString(),name:name,optimize:optimize,turns:0,history:{games:0,asQueen:0,asDrone:0}}
+		queue.add(player);
+		alert();
+		(document.activeElement||$(":focus")).blur()
 		//this.submit(); // If all the validations succeeded
 	});
 	$('#dropdownCommands').on('click','a',function(){
@@ -1447,7 +1543,7 @@ $(function(){
 		commandHandler(command)
 	})
 
-	queue.draw()
+
 
 
 	draftCarousel=$('#draftCarousel');
@@ -1578,7 +1674,38 @@ $(function(){
 
 
 		funMessage.text(_.sample(quotes))
+		
+		drawHighlights(currentSlide)
+
 	})
+	drawHighlights=function(currentSlide){
+		if(!currentSlide){
+			currentSlide=draftCarousel.find('.slick-current').index()
+		}
+	 	var onMachineSlide=$(draftCarousel.find('.slick-track').children()[currentSlide])
+		var currentDraftSlide=onMachineSlide.next()
+
+		everyoneList.children().removeClass('currently-drafted currently-playing blue gold')
+		
+		currentDraftSlide.find('.draftPool')
+			.add('.blueTeam',currentDraftSlide)
+			.add('.goldTeam',currentDraftSlide)
+			.children().each(function(){
+			var id=getID(this)
+			everyoneList.find("[data-id='" + id + "']").addClass('currently-drafted');
+		})
+
+		onMachineSlide.find('.blueTeam')
+			.children().each(function(){
+			var id=getID(this)
+			everyoneList.find("[data-id='" + id + "']").addClass('currently-playing blue');
+		})
+		onMachineSlide.find('.goldTeam')
+			.children().each(function(){
+			var id=getID(this)
+			everyoneList.find("[data-id='" + id + "']").addClass('currently-playing gold');
+		})
+	 }
 
 	draftCarousel.slick({
 		//dots:true,
@@ -1707,6 +1834,8 @@ $(function(){
 	$('#optimizationTech input[type="radio"]').on('change',function(){
 		setTimeout(function(){$('#userName').focus()})
 	})
+	queue.draw()
+	drawHighlights()
 })
 
 
