@@ -1534,7 +1534,7 @@ $(function(){
 		}
 		var player={id:uniqueID('player').toString(),name:name,optimize:optimize,turns:0,history:{games:0,asQueen:0,asDrone:0}}
 		queue.add(player);
-		alert();
+
 		(document.activeElement||$(":focus")).blur()
 		//this.submit(); // If all the validations succeeded
 	});
