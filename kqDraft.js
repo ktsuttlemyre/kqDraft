@@ -8,6 +8,9 @@ function launchFullScreen(element) {
   }
 }
 
+var alert=_.bind(function(arg){
+	this(arg.toString())
+},bootbox.alert);
 
 
 (function ($) {
@@ -1814,7 +1817,6 @@ $(function(){
 	// }))
 
 	var loadState=function(){
-		debugger
 		var list =localStorage.getItem('activeQueue');
 		var dateSaved=(localStorage.getItem('activeQueueSaveTime'))
 		var today=new Date().toLocaleString().split(', ')[0]
@@ -1823,12 +1825,15 @@ $(function(){
 			list=JSON.parse(list)
 			queue.add( list);
 			if(dateSaved && today!=dateSaved){
-				var ans=confirm('Would you like to reset active users weight?')
-				if(ans){
-					queue.setAll('weight',1)
-				}
+				bootbox.confirm('Would you like to reset active users weight?',function(ans){
+					console.log(ans)
+					if(ans){
+						queue.setAll('weight',1)
+					}
+				})
 			}
 		}
+
 	}
 	loadState()
 	$('#optimizationTech input[type="radio"]').on('change',function(){

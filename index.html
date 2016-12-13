@@ -1,6 +1,19 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
+	<!--icon stuff generated at http://realfavicongenerator.net/-->
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=A0RzQp27kd">
+	<link rel="icon" type="image/png" href="/favicon-32x32.png?v=A0RzQp27kd" sizes="32x32">
+	<link rel="icon" type="image/png" href="/favicon-194x194.png?v=A0RzQp27kd" sizes="194x194">
+	<link rel="icon" type="image/png" href="/android-chrome-192x192.png?v=A0RzQp27kd" sizes="192x192">
+	<link rel="icon" type="image/png" href="/favicon-16x16.png?v=A0RzQp27kd" sizes="16x16">
+	<link rel="manifest" href="/manifest.json?v=A0RzQp27kd">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg?v=A0RzQp27kd" color="#5bbad5">
+	<link rel="shortcut icon" href="/favicon.ico?v=A0RzQp27kd">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="msapplication-TileImage" content="/mstile-144x144.png?v=A0RzQp27kd">
+	<meta name="theme-color" content="#ffffff">
+
 	<script>
 		var errorCounter=0;
 		window.onerror = function(msg, url, linenumber) {
@@ -56,6 +69,7 @@
 	<!--bootstrap-->
 	<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script src='https://cdn.rawgit.com/makeusabrew/bootbox/master/bootbox.js'></script>
 
 	<script type="text/javascript" src='https://cdn.rawgit.com/ckknight/random-js/master/lib/random.min.js'></script>
 
@@ -80,6 +94,18 @@
 		window.rwc=module.exports
 	</script>
 <style type="text/css">
+
+/*prevent overscrolling so we dont accidently refresh the page on some browsers*/
+html {
+    overflow: hidden;
+    height: 100%;
+}
+body {
+    height: 100%;
+    overflow: auto;
+}
+/*end of prevent overscrolling*/
+
 .parenthetical{
 	border: 2px solid #555;
 	border-radius:20%;
