@@ -12,6 +12,9 @@ var alert=_.bind(function(arg){
 	this(arg.toString())
 },bootbox.alert);
 
+var isStandAlone=function(){
+	return navigator.standalone||(window.matchMedia('(display-mode: standalone)').matches)// (screen.height-document.documentElement.clientHeight<40);
+};
 
 (function ($) {
  $.fn.longclick = function (selector,callback,timeout) {
@@ -61,7 +64,11 @@ var alert=_.bind(function(arg){
 
 	var counter=0;
 	var uniqueID=function(prefix){
-		return prefix+counter++
+		if(prefix){
+			return prefix+counter++
+		}else{
+			return counter++
+		}
 	}
 	var trashSortable=null
 	var queueSortable=null
@@ -1460,6 +1467,9 @@ $(function(){
 		console.log(cmd,args)
 
 		switch(cmd){
+			case 'STANDALONE':
+				alert(isStandAlone())
+				return 1
 			case 'DEMO':
 			case 'DEMODATA':
 				queue.add(database)
