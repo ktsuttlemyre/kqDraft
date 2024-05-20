@@ -10,6 +10,16 @@
 
   peer.on('connection', conn => {
     conn.on('data', data => {
+      console.log('got data from peer',data)
+      var img = new Image();
+
+// Set the src attribute to a data URL
+img.src = dataURL
+      document.body.appendChild(img)
+      
+
+
+      
       if (data.filetype.includes('image')) {
         const bytes = new Uint8Array(data.file)
         const img = document.createElement('img')
