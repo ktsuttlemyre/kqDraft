@@ -1,6 +1,41 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
+	<script src='https://html2canvas.hertzen.com/dist/html2canvas.min.js'></script>
+<!-- 		javascript:(function() {
+  var script = document.createElement('script');
+  script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+  document.body.appendChild(script);
+})(); -->
+
+<script>
+	//https://blog.bitsrc.io/use-webrtc-and-peerjs-to-build-an-image-sharing-app-f8163b6a6266
+	//https://peerjs.com/
+	//https://github.com/niklasvh/html2canvas?tab=readme-ov-file
+	document.addEventListener('DOMContentLoaded', event => {
+	  const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
+	
+	  const conn = peer.connect('receiver')
+	
+	  setInterval(function(event) {
+		html2canvas(document.body).then(function(canvas) {
+			const dataUrl = canvas.toDataURL('image/png');
+			const base64Image = dataUrl.split(',')[1];
+		    //document.body.appendChild(canvas);
+		});
+	    const blob = new Blob(event.target.files, { type: file.type })
+	
+	    conn.send({
+	      dataURL: dataURL,
+	      filename: file.name,
+	      filetype: file.type
+	    })
+	  },1000)
+	})
+	</script>
+		       
+	
+	</scipt>
 	<!--icon stuff generated at http://realfavicongenerator.net/-->
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=A0RzQp27kd">
 	<link rel="icon" type="image/png" href="/favicon-32x32.png?v=A0RzQp27kd" sizes="32x32">
