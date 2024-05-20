@@ -19,8 +19,8 @@
 		
 		setInterval(function(event) {
 		html2canvas(document.body).then(function(canvas) {
-			const dataUrl = canvas.toDataURL('image/png');
-			const base64Image = dataUrl.split(',')[1];
+			const dataURL = canvas.toDataURL('image/png');
+			const base64Image = dataURL.split(',')[1];
 			//document.body.appendChild(canvas);
 			conn.send({
 				dataURL: dataURL,
