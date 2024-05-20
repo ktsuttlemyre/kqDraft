@@ -8,9 +8,13 @@ function launchFullScreen(element) {
   }
 }
 
-var alert=_.bind(function(arg){
-	this(arg.toString())
-},bootbox.alert);
+// var alert=_.bind(function(arg){
+// 	if(!arg){
+// 		this('undefined')
+// 		return
+// 	}
+// 	this(arg.toString())
+// },bootbox.alert);
 
 var isStandAlone=function(){
 	return navigator.standalone||(window.matchMedia('(display-mode: standalone)').matches)// (screen.height-document.documentElement.clientHeight<40);
@@ -60,7 +64,7 @@ var isStandAlone=function(){
 })(jQuery);
  
 
-	var weightIncrement=1
+	var weightIncrement=5
 
 	var counter=0;
 	var uniqueID=function(prefix){
@@ -72,372 +76,7 @@ var isStandAlone=function(){
 	}
 	var trashSortable=null
 	var queueSortable=null
-	var database=[
-		{
-			id:'0'
-			,name:'Kyle'
-			,teir:1
-			,optimize:'queen'
-			,frequency:{queen:.9}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'1'
-			,name:'Ryan M'
-			,teir:1
-			,optimize:'queen'
-			,frequency:{queen:.4}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'2'
-			,name:'Ryan L'
-			,teir:1
-			,optimize:'queen'
-			,frequency:{queen:1}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'3'
-			,name:'Jorge'
-			,teir:1
-			,optimize:'queen'
-			,frequency:{queen:.5}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'4'
-			,name:'Jason'
-			,teir:1
-			,optimize:''
-			,frequency:{queen:.4}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'5'
-			,name:'Jordan'
-			,teir:1
-			,optimize:''
-			,frequency:{queen:.2}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'6'
-			,name:'Eli'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:0}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'7'
-			,name:'Jacky'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:0}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'8'
-			,name:'Travis'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:0}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'9'
-			,name:'Bobby'
-			,teir:1
-			,optimize:''
-			,frequency:{queen:.3}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'10'
-			,name:'Forest'
-			,teir:1
-			,optimize:''
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'11'
-			,name:'P'
-			,teir:1
-			,optimize:''
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'12'
-			,name:'Tyler'
-			,teir:1
-			,optimize:''
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'13'
-			,name:'John'
-			,teir:1
-			,optimize:'queen'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'14'
-			,name:'Steven'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'15'
-			,name:'Aaron'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'16'
-			,name:'Andrew'
-			,teir:1
-			,optimize:'queen'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'17'
-			,name:'Emily'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'18'
-			,name:'Will'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'19'
-			,name:'NoobQueen'
-			,teir:1
-			,optimize:'queen'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'20'
-			,name:'NoobDrone'
-			,teir:1
-			,optimize:'drone'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'21'
-			,name:'NoobPlay'
-			,teir:1
-			,optimize:''
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'22'
-			,name:'QueenOnly'
-			,teir:1
-			,optimize:'queenOnly'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		},{
-			id:'23'
-			,name:'DroneOnly'
-			,teir:1
-			,optimize:'droneOnly'
-			,frequency:{queen:.8}
-			,stats:{
-				queen:{military:[0,0],snail:[0,0],berries:[0,0]}
-				,drone:{military:[0,0],snail:[0,0],berries:[0,0]}
-			}
-			,history:{
-				games:0
-				,asQueen:0
-				,asDrone:0
-			}
-		}
 
-
-
-	];
 	var Player=function(obj){
 		if(obj instanceof Player){
 			return obj
@@ -714,6 +353,13 @@ var isStandAlone=function(){
 	}
 	var queenFrequencyGetter=function(player,iteration){
 		var x=(iteration*.01)
+		if(kQDraft.isPlaying(player)){
+			if(queue.q.length>20){
+				return 0+x
+			}else{
+				return .20+x
+			}
+		}
 		if(player.optimize=='queenOnly'){
 			return 1+x
 		}else if(player.optimize=='queen'){
@@ -727,6 +373,13 @@ var isStandAlone=function(){
 	}
 	var droneFrequencyGetter=function(player,iteration){
 		var x=(iteration*.01)
+		if(kQDraft.isPlaying(player)){
+			if(queue.q.length>20){
+				return 0+x
+			}else{
+				return .20+x
+			}
+		}
 		if(player.optimize=='queenOnly'){
 			return 0+(iteration*.001) 
 		}else if(player.optimize=='queen'){
@@ -755,6 +408,7 @@ var isStandAlone=function(){
 		var picked=[]
 		var index=0;
 		var bonusProbablity=0
+
 		while(picked.length<n && queue.length){
 			var player=queue[index]
 			if(randomEngine.integer(1,100)<=(100*fn(player,index))+bonusProbablity){
@@ -818,7 +472,7 @@ var isStandAlone=function(){
 		window.rwc=module.export||module.exports;
 	}
 
-	window.curve=.4 //this will increase all numbers by this percent. the idea is to skew the weights so lower turn players get more chances
+	window.curve=0 //this will increase all numbers by this percent. the idea is to skew the weights so lower turn players get more chances
 	var onDeck=function(queue,number){
 		debugger
 		
@@ -914,7 +568,7 @@ var isStandAlone=function(){
 		if(cssClass=='drone'){
 			type=1
 		}
-		var tag=$('<span/>',{class:'tag draggable '+cssClass,'data-sort':type+'-'+name,id:'id_'+obj.id+'_'+uniqueID(),'data-id':obj.id})
+		var tag=$('<span/>',{class:'tag draggable '+cssClass,'data-sort':type+'-'+name+'-'+obj.id,id:'id_'+obj.id+'_'+uniqueID(),'data-id':obj.id})
 		tag.append($('<span/>',{class:'tag-text'}).text(name))
 		//tag.append($('<a/>').append($('<i/>',{class:'remove glyphicon glyphicon-remove-sign glyphicon-white'})))
 		return tag
@@ -924,6 +578,63 @@ var isStandAlone=function(){
 	var KQDraft=function(){
 		if(!(this instanceof KQDraft)){return new KQDraft()}
 		this.draftIndex=0
+	}
+	KQDraft.prototype.isPlaying=function(player){
+		if(typeof player == 'object'){
+			if(player.id){
+				player=player.id
+			}else{
+				throw 'Error: player.id does not exist on object'
+			}
+		}
+		var playing = this.getPlaying();
+		var isPlaying= _.some(playing,{'id':player})
+		console.warn('@@@@looking for user @@@@',player,playing,isPlaying)
+		return isPlaying
+	}
+	// KQDraft.prototype.isQueen=function(player){
+	// 	if(typeof player == 'object'){
+	// 		if(player.id){
+	// 			player=player.id
+	// 		}else{
+	// 			throw 'Error: player.id does not exist on object'
+	// 		}
+	// 	}
+	// 	return _.some(this.getPlaying('queens'),{'id':player})
+	// }
+	KQDraft.prototype.getCurrentGame=function(){
+		var slick=draftCarousel.slick('getSlick')
+		var offset=2 //this is set because slick forces me to use a few blank slides before i can get it to run properly
+
+		var current=slick.slickCurrentSlide()-offset
+		var game=window.gamesHistory[current]
+		game&&console.log('currentgame','blue',game.blue.toArray(),'gold',game.gold.toArray())
+		return game
+	}
+	KQDraft.prototype.getPlaying=function(type){
+
+		//get current game
+		var game = this.getCurrentGame()
+		if(game){
+			//return
+			var playing=[]
+			if(!type){
+				var blue=game.blue.toArray().map(function(val){
+					return val.split('-').pop()
+				})
+				var gold=game.gold.toArray().map(function(val){
+					return val.split('-').pop()
+				})
+				playing=blue.concat(gold)
+			}else if(type=='queen'||type=='queens'){
+				//playing=game.blue.toArray().concat(game.gold.toArray())
+			}
+			//convert ids to objects
+			playing=_.map(playing,function(id){
+				return _.find(queue.q,{id:id})  //TODO slow
+			})
+			return playing
+		}
 	}
 	
 
@@ -950,12 +661,13 @@ var isStandAlone=function(){
 	var topRow=$('<div/>',{class:'row'})
 	//var bottomRow=$('<div/>',{class:'col-xs-12'})
 	var col=$('<div/>',{class:'col-xs-6'})
-	var timeStamp='time-'+Date.now();
-	var draftDiv=$('<div/>',{class:'col-xs-12',id:timeStamp+'_'+'draft'}).addClass('draftPool') //$('<div/>',{class:'sortable draftPool'})
+	var tempId=uniqueID('tempId-')
+	//var timeStamp='time-'+Date.now();
+	var draftDiv=$('<div/>',{class:'col-xs-12',id:tempId+'_'+'draft'}).addClass('draftPool') //$('<div/>',{class:'sortable draftPool'})
 	var blueTeam=col.clone().addClass('team blueTeam') //$('<div/>',{class:'sortable blueTeam'})
 	var goldTeam=col.clone().addClass('team goldTeam') //$('<div/>',{class:'sortable goldTeam'})
-	blueTeam.attr('id',timeStamp+'_'+'blue')
-	goldTeam.attr('id',timeStamp+'_'+'gold')
+	blueTeam.attr('id',tempId+'_'+'blue')
+	goldTeam.attr('id',tempId+'_'+'gold')
 
 
 	var teams = $('<div/>',{class:'teams'})
@@ -989,10 +701,13 @@ var isStandAlone=function(){
 	var conglomorate=draftDiv.add(blueTeam).add(goldTeam)
 	
 	var forceQueenTop=function(){
-			var order = this.toArray();
-			this.sort(order.sort(function(a,b){
+		
+			var array = this.toArray();
+			var order=array.sort(function(a,b){
 				return parseInt(a)-parseInt(b)
-			})); // apply
+			})
+			//alert(array+''+order)
+			this.sort(order); // apply
 		}
 	var options={
 		group: {name:'sortable'
@@ -1023,7 +738,7 @@ var isStandAlone=function(){
 		ghostClass: "from-draft-place-holder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
 		//dragClass: "sortable-drag",  // Class name for the dragging item
-		dataIdAttr: 'data-sort',
+		dataIdAttr: 'data-sort', //data-id
 		forceFallback: true,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
 		//fallbackClass: "sortable-fallback",  // Class name for the cloned DOM Element when using forceFallback
 		//fallbackOnBody: false,  // Appends the cloned DOM Element into the Document's Body
@@ -1034,7 +749,7 @@ var isStandAlone=function(){
 		//scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
 		//scrollSpeed: 10, // px
 		onSort:forceQueenTop,
-		onUpate:forceQueenTop,
+		//onUpdate:forceQueenTop,
 		//setData: function (/** DataTransfer */dataTransfer, /** HTMLElement*/dragEl) {
 		//	dataTransfer.setData('Text', $(dragEl).attr('class')+dragEl.textContent); // `dataTransfer` object of HTML5 DragEvent
 		//},
@@ -1050,8 +765,10 @@ var isStandAlone=function(){
 				//turn the first add into a queen if they are not already
 				if(!item.hasClass('queen')){
 					item.addClass('queen').removeClass('drone col-xs-5')
-					var id=item.attr('data-sort').split('-')[1]
-					item.attr('data-sort','0-'+id)
+					var delim='-'
+					var array=item.attr('data-sort').split(delim)
+					array[0]=0
+					item.attr('data-sort',array.join(delim))
 					//todo update data with queen selection number
 				}
 			}else if($(e.from).attr('id')=='everyone-list'){ //adding from active to draft
@@ -1089,18 +806,27 @@ var isStandAlone=function(){
 	var blueSortable = new Sortable(blueTeam[0],options);
 	var goldSortable = new Sortable(goldTeam[0],options);
 
+	var sortables={draft:draftSortable,blue:blueSortable,gold:goldSortable}
+	gamesHistory.push(sortables)
+	//TODO fix this localStorage.setItem('activeQueue', JSON.stringify(gamesHistory));
+
+
 	blueTeam.add(goldTeam).longclick('.tag',function(e){
 		console.log('long click for change',this,e)
 		//turn a queen into a drone by user action
 		var item=$(this)
 		if(item.hasClass('queen')){
 			item.removeClass('queen').addClass('drone col-xs-5')
-			var id=item.attr('data-sort').split('-')[1]
-			item.attr('data-sort','1-'+id)
+			var delim='-'
+			var array=item.attr('data-sort').split(delim)
+			array[0]=1
+			item.attr('data-sort',array.join(delim))
 		}else if(item.hasClass('drone')){
 			item.removeClass('drone col-xs-5').addClass('queen')
-			var id=item.attr('data-sort').split('-')[1]
-			item.attr('data-sort','0-'+id)
+			var delim='-'
+			var array=item.attr('data-sort').split(delim)
+			array[0]=0
+			item.attr('data-sort',array.join(delim))
 		}
 		//draftSortable.sort()
 		//blueSortable.sort()
@@ -1158,7 +884,7 @@ function isElement(o){
 }
 
 var queue=new KQQueue();
-//queue.add(database)
+//queue.add(testData)
 var draftCarousel;
 var getID=function(item){
 	var id;
@@ -1230,9 +956,12 @@ $(function(){
 		localStorage.setItem('activeQueueSaveTime',new Date().toLocaleString().split(', ')[0])
 	};
 	window.onbeforeunload=saveState
-
-
-
+	
+	window.gamesHistory=(function(){
+		var gamesHistory=localStorage.getItem('gamesHistory')
+		return (gamesHistory)?JSON.parse(gamesHistory):[]
+	})()
+	
 
 	var trashOptions={
 		group: {name:'sortable'
@@ -1254,7 +983,7 @@ $(function(){
 		ghostClass: "place-holder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
 		//dragClass: "sortable-drag",  // Class name for the dragging item
-		dataIdAttr: 'data-sort',
+		dataIdAttr: 'data-id',
 		forceFallback: true,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
 		//fallbackClass: "sortable-fallback",  // Class name for the cloned DOM Element when using forceFallback
 		//fallbackOnBody: false,  // Appends the cloned DOM Element into the Document's Body
@@ -1328,7 +1057,7 @@ $(function(){
 		ghostClass: "from-queue-place-holder",  // Class name for the drop placeholder
 		//chosenClass: "white-out",  // Class name for the chosen item
 		//dragClass: "sortable-drag",  // Class name for the dragging item
-		dataIdAttr: 'data-sort',
+		dataIdAttr: 'data-id',
 		forceFallback: true,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
 		//fallbackClass: "sortable-fallback",  // Class name for the cloned DOM Element when using forceFallback
 		//fallbackOnBody: false,  // Appends the cloned DOM Element into the Document's Body
@@ -1338,6 +1067,12 @@ $(function(){
 		//scrollFn: function(offsetX, offsetY, originalEvent) { ... }, // if you have custom scrollbar scrollFn may be used for autoscrolling
 		//scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
 		//scrollSpeed: 10, // px
+		onStart:function(){
+
+		},
+		onEnd:function(){
+
+		},
 		// onSort:forceQueenTop,
 		// onUpate:forceQueenTop,
 		//setData: function (/** DataTransfer */dataTransfer, /** HTMLElement*/dragEl) {
@@ -1456,13 +1191,18 @@ $(function(){
 	setTimeout(unlockActiveList)
 
 	autoLock && everyoneList.addClass('no-drag')
-
+	window.commandDelim=',' //use , so we can easily use mobile phone to do commands
 	var commandHandler=function(name){
-		var argStart= name.indexOf(':'),args='',cmd=name
-		if(argStart!=-1){
-			args=name.substring(argStart+1,name.length);
-			cmd=name.substring(0,argStart)
+		var args=name.split(commandDelim)
+		if(args.length<=1){
+			return 0
 		}
+		args.shift()
+		// if(argStart!=-1){
+		// 	args=name.substring(argStart+1,name.length);
+		// 	cmd=name.substring(0,argStart)
+		// }
+		var cmd=args.shift();
 		cmd=cmd.toUpperCase().replace(/\s+/g, '');
 		console.log(cmd,args)
 
@@ -1472,10 +1212,11 @@ $(function(){
 				return 1
 			case 'DEMO':
 			case 'DEMODATA':
-				queue.add(database)
+				queue.add(testData)
 				return 1
 			case 'DRAFT':
 				if(args){
+					args=args.join(commandDelim)
 					args=parseFloat(args)
 					while(args){
 						setTimeout(function(){kQDraft.draft()})
@@ -1487,6 +1228,7 @@ $(function(){
 				return 1
 			case 'CURVE':
 				if(args){
+					args=args.join(commandDelim)
 					window.curve=parseFloat(args)
 				}else{
 					alert(window.curve)
@@ -1506,8 +1248,8 @@ $(function(){
 				queue.setAll('weight',1)
 				return 1
 			case 'RESETALL':
-				commandHandler('resetTurns')
-				commandHandler('resetWeight')
+				commandHandler(commandDelim+'resetTurns')
+				commandHandler(commandDelim+'resetWeight')
 				return 1
 			case 'SAVE':
 			case 'SAVESTATE':
@@ -1523,6 +1265,25 @@ $(function(){
 			}
 		return 0
 	}
+	var optimizeMap={
+		'QUEENONLY':'queenOnly'
+		,'DRONEONLY':'droneOnly'
+
+		,'DRONE':'drone'
+		,'!DRONE':'queenOnly'
+		,'=DRONE':'droneOnly'
+		,'QUEEN':'queen'
+		,'!QUEEN':'droneOnly'
+		,'=QUEEN':'queenOnly'
+		//shortcuts
+		,'D':'drone'
+		,'!D':'queenOnly'
+		,'=D':'droneOnly'
+		,'Q':'queen'
+		,'!Q':'droneOnly'
+		,'=Q':'queenOnly'
+	}
+	//$('#optimizationTech input[name=optimize]').each(function(){optioptimizeMapmizemap[$(this).val().toUpperCase()]=true})
 
 	$('#addUser').submit(function(ev) {
 		//do not focus on input again after submit it makes it hard to use on smaller mobile devices with on screen keyboards
@@ -1545,6 +1306,27 @@ $(function(){
 			drawHighlights()
 			return 
 		}
+		//if it wasnt a command (starting with commandDelim) then add it as a player
+
+		//special command for adding players faster
+		var split=name.split(/[\s,]+/)
+		if(split.length>=2){
+			name=split[0]
+			optimize=optimizeMap[split[1].replace(/\s/g,'').toUpperCase()]
+		}
+
+		if(!optimize){
+			alert('Sorry,\n\tKQDraft didn\'t understand what class you would like to play.\t\tTry again')
+			return
+		}
+		
+		if(optimize=='queenOnly'){
+			var ans = confirm('Please note: queen exclusive players will experience a lower frequency of turns due to the limits of queen slots on the cab\n Do you wish to continue?')
+			if(!ans){
+				return
+			}
+		}
+
 		var player={id:uniqueID('player').toString(),name:name,optimize:optimize,turns:0,history:{games:0,asQueen:0,asDrone:0}}
 		queue.add(player);
 
@@ -1553,14 +1335,12 @@ $(function(){
 	});
 	$('#dropdownCommands').on('click','a',function(){
 		var command=$(this).text()
-		commandHandler(command)
+		commandHandler(commandDelim+command)
 	})
 
 
 
-
 	draftCarousel=$('#draftCarousel');
-	debugger
 	
 
 
@@ -1625,10 +1405,10 @@ $(function(){
 
 			//setTimeout(function(){$('.slick-next').addClass('slick-disabled')})
 
-			draftButton.addClass('disabled spin-icon').find('.glyphicon').removeClass('glyphicon-random').addClass('glyphicon-hourglass')
+			draftButton.addClass('disabled spin-icon').find('.fa').removeClass('fa-th-list').addClass('glyphicon-hourglass')
 			setTimeout(function(){
 			//	if(nextSlide>=slick.slideCount-2){
-					$("#draft_button").removeClass('disabled spin-icon').find('.glyphicon').addClass('glyphicon-random').removeClass('glyphicon-hourglass')
+					$("#draft_button").removeClass('disabled spin-icon').find('.fa').addClass('fa-th-list').removeClass('glyphicon-hourglass')
 			//	}else{
 			//		$("#draft_button").addClass('disabled')
 			//	}
@@ -1646,7 +1426,7 @@ $(function(){
 	var afterChangePromises=[]
 	var draftButton;
 	var attachDraftButton=function(){
-		draftButton=$('<button id="draft_button" class="btn btn-default" style="width:25%;"><i class="glyphicon glyphicon-random"></i>&nbsp;</button>')
+		draftButton=$('<button id="draft_button" class="btn btn-default" style="width:25%;"><i class="fa fa-th-list"></i>&nbsp;</button>')
 		$('#carousel-overlay').after($('<div/>',{style:"position:relative;transform:translateY(-100%);text-align: center;margin-top: .25em;"}).append(draftButton))
 
 		draftButton.on('click',draftButtonAction)
