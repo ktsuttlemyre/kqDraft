@@ -5,11 +5,8 @@
 <h1> viewing window </h1>
   <script>
   document.addEventListener('DOMContentLoaded', event => {
-  const peer = new Peer('receiver', {
-    host: 'localhost',
-    port: 9000,
-    path: '/'
-  })
+  const peer = new Peer();
+
 
   peer.on('connection', conn => {
     conn.on('data', data => {
@@ -21,6 +18,7 @@
       }
     })
   })
+      peer.connect('8yfliaishLIHLEWHLFiubai7ehfiuahi7hIUBEFl7eh4rgl8ihaergBLIIUWREHf')
 })
 
 const encode = input => {
