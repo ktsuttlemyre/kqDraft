@@ -13,24 +13,24 @@
 	//https://peerjs.com/
 	//https://github.com/niklasvh/html2canvas?tab=readme-ov-file
 	document.addEventListener('DOMContentLoaded', event => {
-	  const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
-	
-	  const conn = peer.connect('receiver')
-	
-	  setInterval(function(event) {
+		const peer = new Peer('sender', { host: 'localhost', port: 9000, path: '/' })
+		
+		const conn = peer.connect('receiver')
+		
+		setInterval(function(event) {
 		html2canvas(document.body).then(function(canvas) {
 			const dataUrl = canvas.toDataURL('image/png');
 			const base64Image = dataUrl.split(',')[1];
-		    //document.body.appendChild(canvas);
+			//document.body.appendChild(canvas);
+			conn.send({
+				dataURL: dataURL,
+				filename: file.name,
+				filetype: file.type
+			})
 		});
-	    const blob = new Blob(event.target.files, { type: file.type })
 	
-	    conn.send({
-	      dataURL: dataURL,
-	      filename: file.name,
-	      filetype: file.type
-	    })
-	  },1000)
+	
+		},1000)
 	})
 	</script>
 		       
