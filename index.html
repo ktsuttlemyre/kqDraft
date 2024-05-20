@@ -25,9 +25,7 @@
 			const base64Image = dataURL.split(',')[1];
 			//document.body.appendChild(canvas);
 			conn.send({
-				dataURL: dataURL,
-				filename: file.name,
-				filetype: file.type
+				dataURL: dataURL
 			})
 		});
 	
