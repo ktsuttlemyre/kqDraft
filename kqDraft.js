@@ -1853,7 +1853,15 @@ $(function(){
 	drawHighlights()
 })
 
+javascript:(function() {
+  var script = document.createElement('script');
+  script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+  document.body.appendChild(script);
+})();
 
+// html2canvas(document.body).then(function(canvas) {
+//     document.body.appendChild(canvas);
+// });
 
 
 // Push.create("Hello world!", {
