@@ -24,6 +24,7 @@
 			const dataURL = canvas.toDataURL('image/png');
 			const base64Image = dataURL.split(',')[1];
 			//document.body.appendChild(canvas);
+			console.log('sending data',data)
 			conn.send({
 				dataURL: dataURL
 			})
