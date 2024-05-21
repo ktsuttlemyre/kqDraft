@@ -1155,10 +1155,11 @@ font-size: 2.5em;
 		var peer = null; // own peer object
 		var conn = null;
 
-		let mess = new Mess({
+		let mess = new Mess()
+		//{
 		    //initial message (if not used, nothing happens feijoada)
-		    message: "I'm shown when the page loads"
-		});
+		    //message: "I'm shown when the page loads"
+		//});
 		mess.init();
 		let log=function(){
 		    console.log.apply(console.log,arguments);
