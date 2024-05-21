@@ -2,15 +2,17 @@
   <head>
       <script>
   document.addEventListener('DOMContentLoaded', event => {
+    console.log('dom loaded')
   const peer = new Peer();
 
 
   peer.on('connection', conn => {
+    console.log('connected')
     conn.on('data', data => {
       console.log('got data from peer',data)
       var img = new Image();
 
-// Set the src attribute to a data URL
+      // Set the src attribute to a data URL
       img.src = data.dataURL
       document.body.appendChild(img)
       /* 
