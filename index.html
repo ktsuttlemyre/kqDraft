@@ -1198,7 +1198,7 @@ font-size: 2.5em;
                         }
 
                         conn = c;
-                        log("Connected to: " + conn.peer);
+                        log("incomming connection: " + conn.peer);
                         conn.on('data', function (data) {
                           log('Received data: ', data);
                       });
