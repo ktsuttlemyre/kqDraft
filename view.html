@@ -28,6 +28,7 @@
                     //initial message (if not used, nothing happens feijoada)
                     message: "I'm shown when the page loads"
                 });
+		mess.init();
                 let log=function(){
                     console.log.apply(console.log,arguments);
                     mess.show(Array.from(arguments).join('\n'));
