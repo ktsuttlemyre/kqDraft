@@ -27,7 +27,7 @@
                 let mess = new Mess();
 		mess.init();
                 let log=function(){
-		    console.log(console.log,arguments)
+		    console.log.apply(console.log,arguments)
                     mess.show(Array.from(arguments).join('\n'));
                 };
 
