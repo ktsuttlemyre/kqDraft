@@ -97,6 +97,7 @@
                       conn.on('close', function () {
                           log("Connection reset Awaiting connection...");
                           conn = null;
+			  setTimeout(function(){log('refreshing in 10 seconds'); location.reload()},10000)
                       });
                     });
                     peer.on('disconnected', function () {
@@ -110,6 +111,7 @@
                     peer.on('close', function() {
                         conn = null;
                         log("Connection destroyed. Please refresh");
+			setTimeout(function(){log('refreshing in 10 seconds'); location.reload()},10000)
                     });
                     peer.on('error', function (err) {
                         log(err);
