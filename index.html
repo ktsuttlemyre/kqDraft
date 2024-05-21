@@ -16,45 +16,7 @@
   script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
   document.body.appendChild(script);
 })(); -->
-        <script type="text/javascript">
-            (function () {
-		//https://blog.bitsrc.io/use-webrtc-and-peerjs-to-build-an-image-sharing-app-f8163b6a6266
-		//https://peerjs.com/
-		//https://github.com/niklasvh/html2canvas?tab=readme-ov-file
-		var lastPeerId = null;
-		var peer = null; // own peer object
-		var conn = null;
 
-		let mess = new Mess({
-		    //initial message (if not used, nothing happens feijoada)
-		    message: "I'm shown when the page loads"
-		});
-		mess.init();
-		let log=function(){
-		    console.log.apply(console.log,arguments);
-		    mess.show(Array.from(arguments).join('\n'));
-		};
-
-
-		setInterval(function(event) {
-			html2canvas(document.body).then(function(canvas) {
-				const dataURL = canvas.toDataURL('image/png');
-				const base64Image = dataURL.split(',')[1];
-				html=document.documentElement.outerHTML || document.documentElement.innerHTML
-	
-				let data = {
-					dataURL: dataURL,
-					html: html
-				}
-				console.log('sending data',data)
-				conn.send(data)
-			});
-		},10000)
-		initialize();
-            })();
-
-
-	</script>
 	<!--icon stuff generated at http://realfavicongenerator.net/-->
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=A0RzQp27kd">
 	<link rel="icon" type="image/png" href="/favicon-32x32.png?v=A0RzQp27kd" sizes="32x32">
@@ -1184,5 +1146,44 @@ font-size: 2.5em;
 			</span>
 		</div>
 	</div>
+	        <script type="text/javascript">
+            (function () {
+		//https://blog.bitsrc.io/use-webrtc-and-peerjs-to-build-an-image-sharing-app-f8163b6a6266
+		//https://peerjs.com/
+		//https://github.com/niklasvh/html2canvas?tab=readme-ov-file
+		var lastPeerId = null;
+		var peer = null; // own peer object
+		var conn = null;
+
+		let mess = new Mess({
+		    //initial message (if not used, nothing happens feijoada)
+		    message: "I'm shown when the page loads"
+		});
+		mess.init();
+		let log=function(){
+		    console.log.apply(console.log,arguments);
+		    mess.show(Array.from(arguments).join('\n'));
+		};
+
+
+		setInterval(function(event) {
+			html2canvas(document.body).then(function(canvas) {
+				const dataURL = canvas.toDataURL('image/png');
+				const base64Image = dataURL.split(',')[1];
+				html=document.documentElement.outerHTML || document.documentElement.innerHTML
+	
+				let data = {
+					dataURL: dataURL,
+					html: html
+				}
+				console.log('sending data',data)
+				conn.send(data)
+			});
+		},10000)
+		initialize();
+            })();
+
+
+	</script>
 </body>
 </html>
