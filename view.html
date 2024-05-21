@@ -132,6 +132,7 @@
                     }
 
                     // Create connection to destination peer specified in the input field
+			log('Connectng to: ' +id)
                     conn = peer.connect(id, {
                         reliable: true
                     });
