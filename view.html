@@ -1,30 +1,120 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-
-		<script src='https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js'></script>
-<script>
-  const peer = new Peer()
-  const conn = peer.connect('7d9b7c23-777e-4cb5-9bb4-873e0f881c3b');
-
-  conn.on('open', () => {
-    console.log('Connection opened');
-  });
-
-	conn.on('data', data => {
-		console.log('Received data: ', data);
-		
-		const img = new Image();
-		img.src = data.dataURL;
-		document.body.appendChild(img);
-	});
-
-  conn.on('error', err => {
-    console.error('Connection error: ', err);
-  });
-</script>
-  </head>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width">
+        <title>Viewer</title>
+    </head>
     <body>
-<h1> viewing window </h1>
+	    <h1>viewer</h1>
+        <script src="https://graciano.github.io/mess/src/mess.js"></script>
+        <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+        <script type="text/javascript">
+            (function () {
 
-    </body></html>
+                var lastPeerId = null;
+                var peer = null; // Own peer object
+                var peerId = null;
+                var conn = null;
+
+
+                let mess = new Mess({
+                    //initial message (if not used, nothing happens feijoada)
+                    message: "I'm shown when the page loads"
+                });
+                let log=function(){
+                    console.log.apply(console.log,arguments);
+                    mess.show(Array.from(arguments).toString());
+                };
+                /**
+                 * Create the Peer object for our end of the connection.
+                 *
+                 * Sets up callbacks that handle any events related to our
+                 * peer object.
+                 */
+                 function initialize() {
+                    // Create own peer object with connection to shared PeerJS server
+                    peer = new Peer(null, {
+                        debug: 2
+                    });
+                    mess.init();
+
+                    peer.on('open', function (id) {
+                        // Workaround for peer.reconnect deleting previous id
+                        if (peer.id === null) {
+                            log('Received null id from peer open');
+                            peer.id = lastPeerId;
+                        } else {
+                            lastPeerId = peer.id;
+                        }
+
+                        log('ID: " + peer.id + "Awaiting connection...";
+                    });
+                    peer.on('connection', function (c) {
+                        // Allow only a single connection
+                        if (conn && conn.open) {
+                            c.on('open', function() {
+                                c.send("Already connected to another client");
+                                setTimeout(function() { c.close(); }, 500);
+                            });
+                            return;
+                        }
+
+                        conn = c;
+                        log("Connected to: " + conn.peer);
+                        conn.on('data', function (data) {
+                          log("Data recieved");
+                          var cueString = "<span class=\"cueMsg\">Cue: </span>";
+
+				conn.on('data', data => {
+					log('Received data: ', data);
+					
+					const img = new Image();
+					img.src = data.dataURL;
+					document.body.appendChild(img);
+				});
+                          // switch (data) {
+                          //     case 'Go':
+                          //         log(cueString + data);
+                          //         break;
+                          //     case 'Fade':
+                          //         log(cueString + data);
+                          //         break;
+                          //     case 'Off':
+                          //         log(cueString + data);
+                          //         break;
+                          //     case 'Reset':
+                          //         log(cueString + data);
+                          //         break;
+                          //     default:
+                          //         log("<span class=\"peerMsg\">Peer: </span>" + data);
+                          //         break;
+                          // };
+                      });
+                      conn.on('close', function () {
+                          log("Connection reset<br>Awaiting connection...");
+                          conn = null;
+                      });
+                    });
+                    peer.on('disconnected', function () {
+                        log('Connection lost. Please reconnect');
+
+                        // Workaround for peer.reconnect deleting previous id
+                        peer.id = lastPeerId;
+                        peer._lastServerId = lastPeerId;
+                        peer.reconnect();
+                    });
+                    peer.on('close', function() {
+                        conn = null;
+                        log("Connection destroyed. Please refresh");
+                    });
+                    peer.on('error', function (err) {
+                        log(err);
+                    });
+                };
+
+                initialize();
+            })();
+        </script>
+    </body>
+</html>
