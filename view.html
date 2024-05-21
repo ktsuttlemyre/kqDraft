@@ -23,14 +23,10 @@
                 var peerId = null;
                 var conn = null;
 
-
-                let mess = new Mess({
-                    //initial message (if not used, nothing happens feijoada)
-                    message: "I'm shown when the page loads"
-                });
+		//https://graciano.github.io/mess/
+                let mess = new Mess();
 		mess.init();
                 let log=function(){
-                    console.log.apply(console.log,arguments);
                     mess.show(Array.from(arguments).join('\n'));
                 };
 
