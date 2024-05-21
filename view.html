@@ -136,8 +136,7 @@
                     });
 
                     conn.on('open', function () {
-                        status.innerHTML = "Connected to: " + conn.peer;
-                        console.log("Connected to: " + conn.peer);
+                        log("Connected to: " + conn.peer);
 
                         // Check URL params for comamnds that should be sent immediately
                         var command = getUrlParam("command");
