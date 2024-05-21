@@ -1166,20 +1166,82 @@ font-size: 2.5em;
 		};
 
 
-		setInterval(function(event) {
-			html2canvas(document.body).then(function(canvas) {
-				const dataURL = canvas.toDataURL('image/png');
-				const base64Image = dataURL.split(',')[1];
-				html=document.documentElement.outerHTML || document.documentElement.innerHTML
-	
-				let data = {
-					dataURL: dataURL,
-					html: html
-				}
-				console.log('sending data',data)
-				conn.send(data)
-			});
-		},10000)
+
+                function initialize() {
+                    // Create own peer object with connection to shared PeerJS server
+                    peer = new Peer(null, {
+                        debug: 2
+                    });
+
+                    peer.on('open', function (id) {
+                        // Workaround for peer.reconnect deleting previous id
+                        if (peer.id === null) {
+                            log('Received null id from peer open');
+                            peer.id = lastPeerId;
+                        } else {
+                            lastPeerId = peer.id;
+                        }
+
+                        log("ID: " + peer.id, "Awaiting connection...");
+                    });
+
+
+
+                    peer.on('connection', function (c) {
+                        // Allow only a single connection
+                        if (conn && conn.open) {
+                            c.on('open', function() {
+                                c.send("Already connected to another client");
+                                setTimeout(function() { c.close(); }, 500);
+                            });
+                            return;
+                        }
+
+                        conn = c;
+                        log("Connected to: " + conn.peer);
+                        conn.on('data', function (data) {
+                          log('Received data: ', data);
+                      });
+                      conn.on('close', function () {
+                          log("Connection reset Awaiting connection...");
+                          conn = null;
+                      });
+
+
+			setInterval(function(event) {
+				html2canvas(document.body).then(function(canvas) {
+					const dataURL = canvas.toDataURL('image/png');
+					const base64Image = dataURL.split(',')[1];
+					html=document.documentElement.outerHTML || document.documentElement.innerHTML
+		
+					let data = {
+						dataURL: dataURL,
+						html: html
+					}
+					console.log('sending data',data)
+					conn.send(data)
+				});
+			},10000)
+                    });
+                    peer.on('disconnected', function () {
+                        log('Connection lost. Please reconnect');
+
+                        // Workaround for peer.reconnect deleting previous id
+                        peer.id = lastPeerId;
+                        peer._lastServerId = lastPeerId;
+                        peer.reconnect();
+                    });
+                    peer.on('close', function() {
+                        conn = null;
+                        log("Connection destroyed. Please refresh");
+                    });
+                    peer.on('error', function (err) {
+                        log(err);
+                    });
+                };
+		    
+
+
 		initialize();
             })();
 
