@@ -4,37 +4,20 @@
 
 		<script src='https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js'></script>
 <script>
-  const peer = new Peer()
-
-  peer.on('open', id => {
-    console.log('My peer ID is: ' + id);
-  });
-
-  peer.on('error', err => {
-    console.error('Peer error: ', err);
-  });
-
-  peer.on('connection', conn => {
-    console.log('Connected to peer');
-
-    conn.on('data', data => {
-      console.log('Received data: ', data);
-
-      const img = new Image();
-      img.src = data.dataURL;
-      document.body.appendChild(img);
-    });
-
-    conn.on('error', err => {
-      console.error('Connection error: ', err);
-    });
-  });
 
   const conn = peer.connect('7d9b7c23-777e-4cb5-9bb4-873e0f881c3b');
 
   conn.on('open', () => {
     console.log('Connection opened');
   });
+
+	conn.on('data', data => {
+		console.log('Received data: ', data);
+		
+		const img = new Image();
+		img.src = data.dataURL;
+		document.body.appendChild(img);
+	});
 
   conn.on('error', err => {
     console.error('Connection error: ', err);
