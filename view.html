@@ -152,7 +152,9 @@
 				//const img = new Image();
 				//img.src = data.dataURL;
 				//document.body.appendChild(img);
-				document.documentElement.outerHTML=data.html
+				var newDoc = document.open("text/html", "replace");
+				newDoc.write(data.html);
+				newDoc.close();
 			});
                       conn.on('close', function () {
                           log("Connection reset Awaiting connection...");
