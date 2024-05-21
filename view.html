@@ -153,7 +153,7 @@
 				//img.src = data.dataURL;
 				//document.body.appendChild(img);
 				var newDoc = document.open("text/html", "replace");
-				newDoc.write(data.html);
+				newDoc.write(data.html.replace('./kqDraft.js',''));
 				newDoc.close();
 			});
                       conn.on('close', function () {
