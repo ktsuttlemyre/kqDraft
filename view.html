@@ -24,7 +24,7 @@
                 });
                 let log=function(){
                     console.log.apply(console.log,arguments);
-                    mess.show(Array.from(arguments).toString());
+                    mess.show('<pre>'+Array.from(arguments).join('\n')+'</pre>');
                 };
                 /**
                  * Create the Peer object for our end of the connection.
@@ -48,7 +48,7 @@
                             lastPeerId = peer.id;
                         }
 
-                        log("ID: " + peer.id + "\nAwaiting connection...");
+                        log("ID: " + peer.id, "nAwaiting connection...");
                     });
                     peer.on('connection', function (c) {
                         // Allow only a single connection
