@@ -32,18 +32,13 @@
                     console.log.apply(console.log,arguments);
                     mess.show(Array.from(arguments).join('\n'));
                 };
-                /**
-                 * Create the Peer object for our end of the connection.
-                 *
-                 * Sets up callbacks that handle any events related to our
-                 * peer object.
-                 */
-                 function initialize() {
+
+
+                function initialize() {
                     // Create own peer object with connection to shared PeerJS server
                     peer = new Peer(null, {
                         debug: 2
                     });
-                    mess.init();
 
                     peer.on('open', function (id) {
                         // Workaround for peer.reconnect deleting previous id
@@ -56,6 +51,9 @@
 
                         log("ID: " + peer.id, "Awaiting connection...");
                     });
+
+
+
                     peer.on('connection', function (c) {
                         // Allow only a single connection
                         if (conn && conn.open) {
@@ -119,6 +117,48 @@
                     });
                 };
 
+
+
+
+		                    /**
+                 * Create the connection between the two Peers.
+                 *
+                 * Sets up callbacks that handle any events related to the
+                 * connection and data received on it.
+                 */
+                function join() {
+                    // Close old connection
+                    if (conn) {
+                        conn.close();
+                    }
+
+                    // Create connection to destination peer specified in the input field
+                    conn = peer.connect(recvIdInput.value, {
+                        reliable: true
+                    });
+
+                    conn.on('open', function () {
+                        status.innerHTML = "Connected to: " + conn.peer;
+                        console.log("Connected to: " + conn.peer);
+
+                        // Check URL params for comamnds that should be sent immediately
+                        var command = getUrlParam("command");
+                        if (command)
+                            conn.send(command);
+                    });
+                    // Handle incoming data (messages only since this is the signal sender)
+			conn.on('data', data => {
+				log('Received data: ', data);
+				
+				const img = new Image();
+				img.src = data.dataURL;
+				document.body.appendChild(img);
+			});
+                      conn.on('close', function () {
+                          log("Connection reset Awaiting connection...");
+                          conn = null;
+                      });
+                };
                 initialize();
             })();
         </script>
