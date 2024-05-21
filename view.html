@@ -48,6 +48,7 @@
                         }
 
                         log("ID: " + peer.id, "Awaiting connection...");
+			join('6f06212e-614c-4ce0-86b2-4205c042fe9f')
                     });
 
 
@@ -124,14 +125,14 @@
                  * Sets up callbacks that handle any events related to the
                  * connection and data received on it.
                  */
-                function join() {
+                function join(id) {
                     // Close old connection
                     if (conn) {
                         conn.close();
                     }
 
                     // Create connection to destination peer specified in the input field
-                    conn = peer.connect('r6f06212e-614c-4ce0-86b2-4205c042fe9f', {
+                    conn = peer.connect(id, {
                         reliable: true
                     });
 
