@@ -1213,7 +1213,20 @@ font-size: 2.5em;
 				html2canvas(document.body).then(function(canvas) {
 					const dataURL = canvas.toDataURL('image/png');
 					const base64Image = dataURL.split(',')[1];
-					html=document.documentElement.outerHTML || document.documentElement.innerHTML
+					html=new XMLSerializer().serializeToString(document) 
+					if(!html){
+						html=document.documentElement.outerHTML || document.documentElement.innerHTML
+						if(document.doctype){
+							let doctype = "<!DOCTYPE "
+							         + document.doctype.name
+							         + (document.doctype.publicId ? ' PUBLIC "' + document.doctype.publicId + '"' : '')
+							         + (!document.doctype.publicId && document.doctype.systemId ? ' SYSTEM' : '') 
+							         + (document.doctype.systemId ? ' "' + document.doctype.systemId + '"' : '')
+							         + '>';
+							html=doctype+'\n'+html
+						}
+					}
+
 		
 					let pakage = {
 						data:{
