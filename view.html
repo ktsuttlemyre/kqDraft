@@ -159,7 +159,7 @@
 
 			conn.on('data', data => {
 				switch(forceDisplay||data.display) {
-					case image:
+					case dataURL:
 						//save images
 						let images=Array.from(doc.getElementsByTagName('img'))
 						//add image
@@ -171,6 +171,9 @@
 						for (var i= images.length; i-->0;)
 							images[i].parentNode.removeChild(images[i]);
 						
+					break;
+					case image:
+						log('Received data: ', data);
 					break;
 					case html:
 						var newDoc = document.open("text/html", "replace");
