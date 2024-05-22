@@ -173,7 +173,7 @@
 				data=data.data||data;
 				switch(forceDisplay||data.display) {
 					case 'dataURL':
-						if(display_medium == 'iframe'){
+						if(displayMedium == 'iframe'){
 						
 						}else{ // root
 							//save images
@@ -195,7 +195,7 @@
 					break;
 					case 'html':
 						let html=data.html.replace('./kqDraft.js','')
-						if(display_medium == 'iframe'){
+						if(displayMedium == 'iframe'){
 							html = html.replace(/\s{2,}/g, '')   // <-- Replace all consecutive spaces, 2+
 							.replace(/%/g, '%25')     // <-- Escape %
 							.replace(/&/g, '%26')     // <-- Escape &
@@ -212,7 +212,7 @@
 					break;
 					case 'xhtml': //https://stackoverflow.com/questions/48772331/open-xml-in-new-window-with-javascript
 						let xhtml=data.xhtml.replace('./kqDraft.js','');
-						if(display_medium == 'iframe'){
+						if(displayMedium == 'iframe'){
 							let blob = new Blob([xhtml], {type: 'text/xml'});
 							let url = URL.createObjectURL(blob);
 							iframe.style.width=data.viewport.width+'px'
