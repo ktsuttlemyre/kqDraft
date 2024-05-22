@@ -1222,6 +1222,10 @@ font-size: 2.5em;
 							image: null,
 							data: null,
 							html: html
+							viewport: {
+								width:Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+								height:Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+							}
 						}
 					}
 					console.log('sending pakage',pakage)
