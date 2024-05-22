@@ -7,6 +7,7 @@
     </head>
     <body>
 	    <h1>viewer</h1>
+	    <iframe id="viewport_iframe" style="border:0;padding:0;margin:0 auto;"></iframe>
 	<style>
 		#mess-messElement {
 			white-space: preserve;
@@ -24,7 +25,7 @@
         <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
         <script type="text/javascript">
             (function () {
-
+		let iframe = document.getElementById('viewport_iframe')
                 var lastPeerId = null;
                 var peer = null; // Own peer object
                 var peerId = null;
@@ -155,7 +156,8 @@
                         //     conn.send(command);
                     });
                     // Handle incoming data (messages only since this is the signal sender)
-			forceDisplay='html'
+			forceDisplay='xhtml'
+			
 
 			conn.on('data', data => {
 				package=data;
@@ -178,12 +180,22 @@
 						log('Received data: ', data);
 					break;
 					case 'html':
-						var newDoc = document.open("text/html", "replace");
-						newDoc.write(data.html.replace('./kqDraft.js',''));
+						let html=data.html.replace('./kqDraft.js','')
+						let newDoc = document.open("text/html", "replace");
+						newDoc.write(html);
 						newDoc.close();
+					break;
+					case 'xhtml': //https://stackoverflow.com/questions/48772331/open-xml-in-new-window-with-javascript
+						let xhtml=data.xhtml.replace('./kqDraft.js','');
+						let blob = new Blob([xhtml], {type: 'text/xml'});
+						let url = URL.createObjectURL(blob);
+						iframe.style.width=data.viewport.width+'px'
+						iframe.src=url;
+						URL.revokeObjectURL(url); //Releases the resources
 					break;
 					case 'data':
 						//this will be custom code in the future
+						log('Received data: ', data);
 					break
 					default:
 						log('Received data: ', data);
