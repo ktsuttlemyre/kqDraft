@@ -1213,28 +1213,31 @@ font-size: 2.5em;
 				html2canvas(document.body).then(function(canvas) {
 					const dataURL = canvas.toDataURL('image/png');
 					const base64Image = dataURL.split(',')[1];
-					html=new XMLSerializer().serializeToString(document) 
-					if(!html){
-						html=document.documentElement.outerHTML || document.documentElement.innerHTML
+					html=document.documentElement.outerHTML || document.documentElement.innerHTML
+					
+					xhtml=new XMLSerializer().serializeToString(document) 
+					if(!xhtml){
+						let doctype='' //set default doctype here (note ''  will run in quarks mode)
 						if(document.doctype){
-							let doctype = "<!DOCTYPE "
+							doctype = "<!DOCTYPE "
 							         + document.doctype.name
 							         + (document.doctype.publicId ? ' PUBLIC "' + document.doctype.publicId + '"' : '')
 							         + (!document.doctype.publicId && document.doctype.systemId ? ' SYSTEM' : '') 
 							         + (document.doctype.systemId ? ' "' + document.doctype.systemId + '"' : '')
 							         + '>';
-							html=doctype+'\n'+html
 						}
+						xhtml=doctype+'\n'+html
 					}
 
 		
 					let pakage = {
 						data:{
-							display: dataURL,
+							display: dataURL, //tell the other side which one to use (the renderer can override this)
 							dataURL: dataURL,
-							image: null,
-							data: null,
+							image: null, //should come from here https://blog.bitsrc.io/use-webrtc-and-peerjs-to-build-an-image-sharing-app-f8163b6a6266
+							data: null, //this would be the raw data to recreate the page as is using a backbone vue like renderer
 							html: html,
+							xhtml: xhtml, //load in a frame via dataurl maybe?
 							viewport: {
 								width:Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0),
 								height:Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
