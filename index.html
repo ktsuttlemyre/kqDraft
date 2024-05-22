@@ -1216,7 +1216,10 @@ font-size: 2.5em;
 					html=document.documentElement.outerHTML || document.documentElement.innerHTML
 		
 					let data = {
+						display: dataURL,
 						dataURL: dataURL,
+						image: null,
+						data: null,
 						html: html
 					}
 					console.log('sending data',data)
