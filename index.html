@@ -1252,8 +1252,12 @@ font-size: 2.5em;
 			},10000)
                     }); //end peer.on connection
                     peerjs.on('disconnected', function () {
-				clearInterval()
-                        log('Connection lost. Please reconnect');
+			//  for (const [peerID, connection] of Object.entries(connections)) {
+			// 	 if(connection.close){
+			// 	  	clearInterval(connections[connection.peer].interval)
+			// 	 }
+			// }
+                        log('Connection lost. Please reconnect',arguments);
 
                         // Workaround for peer.reconnect deleting previous id
                         peerjs.id = lastPeerId;
@@ -1267,10 +1271,10 @@ font-size: 2.5em;
 			// 	 }
 			// }
 
-                        log("User disconnected",arguments);
+                        log("User closed connection",arguments);
                     });
                     peerjs.on('error', function (err) {
-                        log(err);
+                        log('Error:',err);
                     });
                 }; //initialize
 		    
