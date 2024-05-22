@@ -158,6 +158,8 @@
 			forceDisplay='image'
 
 			conn.on('data', data => {
+				package=data;
+				data=data.data||data;
 				switch(forceDisplay||data.display) {
 					case dataURL:
 						//save images
