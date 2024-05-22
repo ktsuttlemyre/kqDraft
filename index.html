@@ -1215,15 +1215,17 @@ font-size: 2.5em;
 					const base64Image = dataURL.split(',')[1];
 					html=document.documentElement.outerHTML || document.documentElement.innerHTML
 		
-					let data = {
-						display: dataURL,
-						dataURL: dataURL,
-						image: null,
-						data: null,
-						html: html
+					let pakage = {
+						data:{
+							display: dataURL,
+							dataURL: dataURL,
+							image: null,
+							data: null,
+							html: html
+						}
 					}
-					console.log('sending data',data)
-					conn.send(data)
+					console.log('sending pakage',pakage)
+					conn.send(pakage)
 				});
 			},10000)
                     });
