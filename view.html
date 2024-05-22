@@ -161,7 +161,7 @@
 				package=data;
 				data=data.data||data;
 				switch(forceDisplay||data.display) {
-					case dataURL:
+					case 'dataURL':
 						//save images
 						let images=Array.from(doc.getElementsByTagName('img'))
 						//add image
@@ -174,15 +174,15 @@
 							images[i].parentNode.removeChild(images[i]);
 						
 					break;
-					case image:
+					case 'image':
 						log('Received data: ', data);
 					break;
-					case html:
+					case 'html':
 						var newDoc = document.open("text/html", "replace");
 						newDoc.write(data.html.replace('./kqDraft.js',''));
 						newDoc.close();
 					break;
-					case data:
+					case 'data':
 						//this will be custom code in the future
 					break
 					default:
