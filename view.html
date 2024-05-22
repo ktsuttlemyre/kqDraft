@@ -190,6 +190,7 @@
 						let blob = new Blob([xhtml], {type: 'text/xml'});
 						let url = URL.createObjectURL(blob);
 						iframe.style.width=data.viewport.width+'px'
+						iframe.style.maxWidth='100%'
 						iframe.src=url;
 						URL.revokeObjectURL(url); //Releases the resources
 					break;
