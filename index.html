@@ -1152,8 +1152,9 @@ font-size: 2.5em;
 		//https://peerjs.com/
 		//https://github.com/niklasvh/html2canvas?tab=readme-ov-file
 		var lastPeerId = null;
-		var peer = null; // own peer object
-		var conn = null;
+		var peerjs = null; // own peer object
+		
+		var connections = {};
 
 		let mess = new Mess()
 		//{
@@ -1170,46 +1171,46 @@ font-size: 2.5em;
 
                 function initialize() {
                     // Create own peer object with connection to shared PeerJS server
-                    peer = new Peer('6f06212e-614c-4ce0-86b2-4205c042fe9f', {
+                    peerjs = new Peer('6f06212e-614c-4ce0-86b2-4205c042fe9f', {
                         debug: 2
                     });
 
-                    peer.on('open', function (id) {
+                    peerjs.on('open', function (id) {
                         // Workaround for peer.reconnect deleting previous id
-                        if (peer.id === null) {
+                        if (peerjs.id === null) {
                             log('Received null id from peer open');
-                            peer.id = lastPeerId;
+                            peerjs.id = lastPeerId;
                         } else {
-                            lastPeerId = peer.id;
+                            lastPeerId = peerjs.id;
                         }
 
-                        log("ID: " + peer.id, "Awaiting connection...");
+                        log("ID: " + peerjs.id, "Awaiting connection...");
                     });
 
 
 
-                    peer.on('connection', function (c) {
+                    peerjs.on('connection', function (conn) {
                         // Allow only a single connection
-                        if (conn && conn.open) {
-                            c.on('open', function() {
-                                c.send("Already connected to another client");
-                                setTimeout(function() { c.close(); }, 500);
-                            });
-                            return;
-                        }
-
-                        conn = c;
-                        log("incomming connection: " + conn.peer);
-                        conn.on('data', function (data) {
+                        // if (connection && connection.open) {
+                        //     conn.on('open', function() {
+                        //         conn.send("Already connected to another client");
+                        //         setTimeout(function() { conn.close(); }, 500);
+                        //     });
+                        //     return;
+                        // }
+			let connection=conn;
+                        connections[connection.peer]=conn;
+                        log("incomming connection: " + connection.peer);
+                        connection.on('data', function (data) {
                           log('Received data: ', data);
                       });
-                      conn.on('close', function () {
+                      connection.on('close', function () {
                           log("Connection reset Awaiting connection...");
-                          conn = null;
+                          connection = null;
                       });
 
 
-			setInterval(function(event) {
+			connection.interval=setInterval(function(event) {
 				html2canvas(document.body).then(function(canvas) {
 					const dataURL = canvas.toDataURL('image/png');
 					const base64Image = dataURL.split(',')[1];
@@ -1245,26 +1246,32 @@ font-size: 2.5em;
 						}
 					}
 					console.log('sending pakage',pakage)
-					conn.send(pakage)
+					connection.send(pakage)
 				});
 			},10000)
-                    });
-                    peer.on('disconnected', function () {
+                    }); //end peer.on connection
+                    peerjs.on('disconnected', function () {
+				clearInterval()
                         log('Connection lost. Please reconnect');
 
                         // Workaround for peer.reconnect deleting previous id
-                        peer.id = lastPeerId;
-                        peer._lastServerId = lastPeerId;
-                        peer.reconnect();
+                        peerjs.id = lastPeerId;
+                        peerjs._lastServerId = lastPeerId;
+                        peerjs.reconnect();
                     });
-                    peer.on('close', function() {
-                        conn = null;
-                        log("Connection destroyed. Please refresh");
+                    peerjs.on('close', function() {
+			//  for (const [peerID, connection] of Object.entries(connections)) {
+			// 	 if(connection.close){
+			// 	  	clearInterval(connections[connection.peer].interval)
+			// 	 }
+			// }
+
+                        log("User disconnected",arguments);
                     });
-                    peer.on('error', function (err) {
+                    peerjs.on('error', function (err) {
                         log(err);
                     });
-                };
+                }; //initialize
 		    
 
 		if(location.pathname=='/kqDraft/'){
