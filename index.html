@@ -1201,7 +1201,7 @@ font-size: 2.5em;
 			let connection=conn;
                         connections[connection.peer]=conn;
                         log("incomming connection: ",connection.peer);
-			console.log("incomming connection,connection)
+			console.log("incomming connection",connection)
                         connection.on('data', function (data) {
                           log('Received data: ', data);
                       });
