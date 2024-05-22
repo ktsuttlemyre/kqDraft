@@ -203,6 +203,8 @@
 							.replace(/"/g, '%22')     // <-- Escape "
 							.replace(/'/g, '%27');    // <-- Escape ' (to be 100% safe)
 							var dataURI = 'data:text/html;charset=UTF-8,' + html;
+							iframe.style.width=data.viewport.width+'px'
+							//iframe.style.height=data.viewport.height+'px'
 							iframe.src=dataURI
 						}else{ // root
 							let newDoc = document.open("text/html", "replace");
