@@ -1251,7 +1251,7 @@ font-size: 2.5em;
 							dataURL: dataURL,
 							image: null, //should come from here https://blog.bitsrc.io/use-webrtc-and-peerjs-to-build-an-image-sharing-app-f8163b6a6266
 							data: null, //this would be the raw data to recreate the page as is using a backbone vue like renderer
-							html: html,
+							html: xhtml,
 							xhtml: xhtml, //load in a frame via dataurl maybe?
 							viewport: {
 								width:Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0),
@@ -1292,10 +1292,9 @@ font-size: 2.5em;
                 }; //initialize
 		    
 
-		if(location.pathname=='/kqDraft/'){
-			alert('starting')
+		//if(location.pathname=='/kqDraft/'){
 			initialize();
-		}
+		//}
             })();
 
 
