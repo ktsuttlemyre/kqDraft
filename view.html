@@ -64,6 +64,7 @@
 		let div = document.getElementById('viewport_div')
 		var iframes = div.getElementsByTagName("iframe");
 		let iframe = iframes[0]
+		let iframe_index=-1
                 var lastPeerId = null;
                 var peer = null; // Own peer object
                 var peerId = null;
@@ -216,6 +217,9 @@
 		let drawFrame=function(package){
 			forceDisplay='html'
 			displayMedium='iframe' // iframe or root
+			if(displayMedium=='iframe'){
+				iframe=iframes[iframe_index++]
+			}
 			data=package.data||package;
 			switch(forceDisplay||data.display) {
 				case 'dataURL':
@@ -248,13 +252,15 @@
 						iframe.style.width=data.viewport.width+'px'
 						if(iframe.srcdoc){
 							iframe.srcdoc=html
-							oldFrame=html
-							return
+						}else{
+							idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
+							idoc.document.open();
+							idoc.document.write(html);
+							idoc.document.close();
 						}
-						idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
-						idoc.document.open();
-						idoc.document.write(html);
-						idoc.document.close();
+						iframe.style.visibility='visible'
+						let oldIndex=iframe_index-1
+						setTimeout(function(){iframes[oldIndex].style.visibility='hidden'},1)
 						oldFrame=html
 					}else{ // root
 						let newDoc = document.open("text/html", "replace");
