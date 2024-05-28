@@ -169,14 +169,17 @@
 			forceDisplay='html'
 			displayMedium='root' // iframe or root
 			
-
+			var oldFrame=''
+			var failsafeTimeout=0
 			conn.on('data', data => {
+				clearTimeout(failsafeTimeout)
+				failsafeTimeout=setTimeout(function(){location.reload();},60000)
 				package=data;
 				data=data.data||data;
 				switch(forceDisplay||data.display) {
 					case 'dataURL':
 						if(displayMedium == 'iframe'){
-						
+							throw "need to implement"
 						}else{ // root
 							//save images
 							let images=Array.from(document.getElementsByTagName('img'))
@@ -197,29 +200,39 @@
 					break;
 					case 'html':
 						let html=data.html.replace('./kqDraft.js','')
+						if(oldFrame==html){ //if display medium changes during runtime this will have lingering artifacts
+							return
+						}
 						if(displayMedium == 'iframe'){
-
 							var dataURI = 'data:text/html,' + encodeURIComponent(html);
 							iframe.style.width=data.viewport.width+'px'
 							//iframe.style.height=data.viewport.height+'px'
 							iframe.src=dataURI
+							oldFrame=dataURI
+							//DEVNOTE: TODO dont use datauri write diretctly to the iframe
 						}else{ // root
 							let newDoc = document.open("text/html", "replace");
 							newDoc.write(html);
 							newDoc.close();
+							oldFrame=html
 						}
 					break;
 					case 'xhtml': //https://stackoverflow.com/questions/48772331/open-xml-in-new-window-with-javascript
 						let xhtml=data.xhtml.replace('./kqDraft.js','');
+						if(oldFrame==xhtml){ //if display medium changes during runtime this will have lingering artifacts
+							return
+						}
 						if(displayMedium == 'iframe'){
 							let blob = new Blob([xhtml], {type: 'text/xml'});
 							let url = URL.createObjectURL(blob);
 							iframe.style.width=data.viewport.width+'px'
 							//iframe.style.height=data.viewport.height+'px'
-							iframe.src=url;
+							iframe.src=url; 
+							//DEVNOTE: TODO dont use datauri write diretctly to the iframe
 							URL.revokeObjectURL(url); //Releases the resources
+							oldFrame=url
 						}else{ // root
-							
+							throw "need to implement"
 						}	
 					break;
 					case 'data':
@@ -237,7 +250,7 @@
                 };
                 initialize();
             })();
-		setTimeout(function(){location.reload();},60000)
+		
         </script>
     </body>
 </html>
