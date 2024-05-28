@@ -264,7 +264,7 @@
 					}
 					if(displayMedium == 'iframe'){
 						iframe.style.width=data.viewport.width+'px'
-						if(iframe.srcdoc){
+						if("srcdoc" in iframe){
 							iframe.srcdoc=html
 						}else{
 							idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
@@ -311,10 +311,10 @@
 					let fram=iframes[iframe_old_index]
 					if(fram){
 						fram.style.visibility='hidden'
-						if(fram.srcdoc){
+						if("srcdoc" in fram){
 							fram.srcdoc=''
 						}else{
-							let idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
+							let idoc = fram.contentWindow || fram.contentDocument.document || fram.contentDocument;
 							idoc.document.open();
 							idoc.document.write('');
 							idoc.document.close();
