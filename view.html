@@ -58,6 +58,10 @@
 		<iframe class="viewport_iframes" style="visibility: hidden;"></iframe>
 		<iframe class="viewport_iframes" style="visibility: hidden;"></iframe>
 		<iframe class="viewport_iframes" style="visibility: hidden;"></iframe>
+		<iframe class="viewport_iframes" style="visibility: hidden;"></iframe>
+		<iframe class="viewport_iframes" style="visibility: hidden;"></iframe>
+		<iframe class="viewport_iframes" style="visibility: hidden;"></iframe>
+		<iframe class="viewport_iframes" style="visibility: hidden;"></iframe>
 		</div>
 
         <script src="https://graciano.github.io/mess/src/mess.js"></script>
@@ -307,8 +311,17 @@
 					let fram=iframes[iframe_old_index]
 					if(fram){
 						fram.style.visibility='hidden'
+						if(fram.srcdoc){
+							fram.srcdoc=''
+						}else{
+							let idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
+							idoc.document.open();
+							idoc.document.write('');
+							idoc.document.close();
+						}
+
 					}
-				},500)
+				},500) //TODO this should be a callback from when the iframe has rendered
 			}
 		}
                 initialize();
