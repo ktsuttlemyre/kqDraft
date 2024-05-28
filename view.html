@@ -218,6 +218,7 @@
 			forceDisplay='html'
 			displayMedium='iframe' // iframe or root
 			if(displayMedium=='iframe'){
+				iframe_old_index=iframe_index
 				iframe=iframes[iframe_index++]
 				if(!iframe){
 					iframe_index=0
@@ -297,8 +298,10 @@
 					log('Received data: ', data);
 				}
 			if(displayMedium=='iframe'){
-				let oldIndex=iframe_index-1
-				setTimeout(function(){iframes[oldIndex].style.visibility='hidden'},1)
+				setTimeout(function(){
+					let fram=iframes[iframe_old_index]
+					fram && fram.style.visibility='hidden'
+				},1)
 			}
 		}
                 initialize();
