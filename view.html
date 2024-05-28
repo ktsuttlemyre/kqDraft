@@ -166,82 +166,17 @@
                         //     conn.send(command);
                     });
                     // Handle incoming data (messages only since this is the signal sender)
-			forceDisplay='html'
-			displayMedium='root' // iframe or root
-			
-			var oldFrame=''
+
 			var failsafeTimeout=0
-			conn.on('data', data => {
+			conn.on('data', package => {
 				clearTimeout(failsafeTimeout)
 				failsafeTimeout=setTimeout(function(){location.reload();},60000)
-				package=data;
-				data=data.data||data;
-				console.log(data)
-				switch(forceDisplay||data.display) {
-					case 'dataURL':
-						if(displayMedium == 'iframe'){
-							throw  new Error("need to implement")
-						}else{ // root
-							//save images
-							let images=Array.from(document.getElementsByTagName('img'))
-							//add image
-							const img = new Image();
-							img.className += " remote_image";
-							img.src = data.dataURL;
-							document.body.appendChild(img);
-							//remove other images
-							for (var i= images.length; i-->0;){
-								images[i].parentNode.removeChild(images[i]);
-							}
-						}
-						
-					break;
-					case 'image':
-						log('Received data: ', data);
-					break;
-					case 'html':
-						let html=data.html.replace('./kqDraft.js','')
-						if(oldFrame==html){ //if display medium changes during runtime this will have lingering artifacts
-							return
-						}
-						if(displayMedium == 'iframe'){
-							var dataURI = 'data:text/html,' + encodeURIComponent(html);
-							iframe.style.width=data.viewport.width+'px'
-							//iframe.style.height=data.viewport.height+'px'
-							iframe.src=dataURI
-							oldFrame=dataURI
-							//DEVNOTE: TODO dont use datauri write diretctly to the iframe
-						}else{ // root
-							let newDoc = document.open("text/html", "replace");
-							newDoc.write(html);
-							newDoc.close();
-							oldFrame=html
-						}
-					break;
-					case 'xhtml': //https://stackoverflow.com/questions/48772331/open-xml-in-new-window-with-javascript
-						let xhtml=data.xhtml.replace('./kqDraft.js','');
-						if(oldFrame==xhtml){ //if display medium changes during runtime this will have lingering artifacts
-							return
-						}
-						if(displayMedium == 'iframe'){
-							let blob = new Blob([xhtml], {type: 'text/xml'});
-							let url = URL.createObjectURL(blob);
-							iframe.style.width=data.viewport.width+'px'
-							//iframe.style.height=data.viewport.height+'px'
-							iframe.src=url; 
-							//DEVNOTE: TODO dont use datauri write diretctly to the iframe
-							URL.revokeObjectURL(url); //Releases the resources
-							oldFrame=url
-						}else{ // root
-							throw  new Error("need to implement")
-						}	
-					break;
-					case 'data':
-						//this will be custom code in the future
-						log('Received data: ', data);
-					break
-					default:
-						log('Received data: ', data);
+				console.log('got package',package)
+				if(package.type=='alive'){
+					return
+				}
+				if(package.type=='frame'){
+					drawFrame(package)
 				}
 			});
                       conn.on('close', function () {
@@ -249,6 +184,78 @@
                           conn = null;
                       });
                 };
+		var oldFrame=''
+		let drawFrame=function(package){
+			forceDisplay='html'
+			displayMedium='root' // iframe or root
+			data=package.data||package;
+			switch(forceDisplay||data.display) {
+				case 'dataURL':
+					if(displayMedium == 'iframe'){
+						throw  new Error("need to implement")
+					}else{ // root
+						//save images
+						let images=Array.from(document.getElementsByTagName('img'))
+						//add image
+						const img = new Image();
+						img.className += " remote_image";
+						img.src = data.dataURL;
+						document.body.appendChild(img);
+						//remove other images
+						for (var i= images.length; i-->0;){
+							images[i].parentNode.removeChild(images[i]);
+						}
+					}
+					
+				break;
+				case 'image':
+					log('Received data: ', data);
+				break;
+				case 'html':
+					let html=data.html.replace('./kqDraft.js','')
+					if(oldFrame==html){ //if display medium changes during runtime this will have lingering artifacts
+						return
+					}
+					if(displayMedium == 'iframe'){
+						var dataURI = 'data:text/html,' + encodeURIComponent(html);
+						iframe.style.width=data.viewport.width+'px'
+						//iframe.style.height=data.viewport.height+'px'
+						iframe.src=dataURI
+						oldFrame=dataURI
+						//DEVNOTE: TODO dont use datauri write diretctly to the iframe
+					}else{ // root
+						let newDoc = document.open("text/html", "replace");
+						newDoc.write(html);
+						newDoc.close();
+						oldFrame=html
+					}
+				break;
+				case 'xhtml': //https://stackoverflow.com/questions/48772331/open-xml-in-new-window-with-javascript
+					let xhtml=data.xhtml.replace('./kqDraft.js','');
+					if(oldFrame==xhtml){ //if display medium changes during runtime this will have lingering artifacts
+						return
+					}
+					if(displayMedium == 'iframe'){
+						let blob = new Blob([xhtml], {type: 'text/xml'});
+						let url = URL.createObjectURL(blob);
+						iframe.style.width=data.viewport.width+'px'
+						//iframe.style.height=data.viewport.height+'px'
+						iframe.src=url; 
+						//DEVNOTE: TODO dont use datauri write diretctly to the iframe
+						URL.revokeObjectURL(url); //Releases the resources
+						oldFrame=url
+					}else{ // root
+						throw  new Error("need to implement")
+					}	
+				break;
+				case 'data':
+					//this will be custom code in the future
+					log('Received data: ', data);
+				break
+				default:
+					log('Received data: ', data);
+				}
+		}
                 initialize();
             })();
 		
