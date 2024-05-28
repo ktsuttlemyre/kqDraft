@@ -218,6 +218,11 @@
 					}
 					if(displayMedium == 'iframe'){
 						iframe.style.width=data.viewport.width+'px'
+						if(iframe.srcdoc){
+							iframe.srcdoc=html
+							oldFrame=html
+							return
+						}
 						idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
 						idoc.document.open();
 						idoc.document.write(html);
