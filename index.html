@@ -1210,31 +1210,41 @@ font-size: 2.5em;
                           connection = null;
                       });
 
-
+			var oldFrame=''
 			connection.interval=setInterval(function(event) {
+				
+				html=document.documentElement.outerHTML || document.documentElement.innerHTML
+				if(oldFrame == html){
+					package = {type:'alive'}
+					console.log('sending keep alive pakage',pakage)
+					connection.send(pakage)
+					return
+				}
+				oldFrame=html
+				
+				xhtml=new XMLSerializer().serializeToString(document) 
+				if(!xhtml){
+					let doctype='' //set default doctype here (note ''  will run in quarks mode)
+					if(document.doctype){
+						doctype = "<!DOCTYPE "
+							 + document.doctype.name
+							 + (document.doctype.publicId ? ' PUBLIC "' + document.doctype.publicId + '"' : '')
+							 + (!document.doctype.publicId && document.doctype.systemId ? ' SYSTEM' : '') 
+							 + (document.doctype.systemId ? ' "' + document.doctype.systemId + '"' : '')
+							 + '>';
+					}
+					xhtml=doctype+'\n'+html
+				}
+
 				html2canvas(document.body).then(function(canvas) {
 					const dataURL = canvas.toDataURL('image/png');
 					const base64Image = dataURL.split(',')[1];
-					html=document.documentElement.outerHTML || document.documentElement.innerHTML
-					
-					xhtml=new XMLSerializer().serializeToString(document) 
-					if(!xhtml){
-						let doctype='' //set default doctype here (note ''  will run in quarks mode)
-						if(document.doctype){
-							doctype = "<!DOCTYPE "
-							         + document.doctype.name
-							         + (document.doctype.publicId ? ' PUBLIC "' + document.doctype.publicId + '"' : '')
-							         + (!document.doctype.publicId && document.doctype.systemId ? ' SYSTEM' : '') 
-							         + (document.doctype.systemId ? ' "' + document.doctype.systemId + '"' : '')
-							         + '>';
-						}
-						xhtml=doctype+'\n'+html
-					}
 
 		
 					let pakage = {
+						type:"frame",
 						data:{
-							display: dataURL, //tell the other side which one to use (the renderer can override this)
+							display: 'html', //tell the other side which one to use (the renderer can override this)
 							dataURL: dataURL,
 							image: null, //should come from here https://blog.bitsrc.io/use-webrtc-and-peerjs-to-build-an-image-sharing-app-f8163b6a6266
 							data: null, //this would be the raw data to recreate the page as is using a backbone vue like renderer
@@ -1249,7 +1259,7 @@ font-size: 2.5em;
 					console.log('sending pakage',pakage)
 					connection.send(pakage)
 				});
-			},10000)
+			},1000)
                     }); //end peer.on connection
                     peerjs.on('disconnected', function () {
 			//  for (const [peerID, connection] of Object.entries(connections)) {
