@@ -176,6 +176,7 @@
 				failsafeTimeout=setTimeout(function(){location.reload();},60000)
 				package=data;
 				data=data.data||data;
+				console.log(data)
 				switch(forceDisplay||data.display) {
 					case 'dataURL':
 						if(displayMedium == 'iframe'){
