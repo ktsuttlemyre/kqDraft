@@ -1212,6 +1212,9 @@ font-size: 2.5em;
 
 			var oldFrame=''
 			connection.interval=setInterval(function(event) {
+				if(!connection){ //TODO fix this when viewer refreshes
+					return
+				}
 				
 				html=document.documentElement.outerHTML || document.documentElement.innerHTML
 				if(oldFrame == html){
