@@ -300,7 +300,9 @@
 			if(displayMedium=='iframe'){
 				setTimeout(function(){
 					let fram=iframes[iframe_old_index]
-					fram && fram.style.visibility='hidden'
+					if(fram){
+						fram.style.visibility='hidden'
+					}
 				},1)
 			}
 		}
