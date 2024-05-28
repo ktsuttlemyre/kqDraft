@@ -180,7 +180,7 @@
 				switch(forceDisplay||data.display) {
 					case 'dataURL':
 						if(displayMedium == 'iframe'){
-							throw "need to implement"
+							throw  new Error("need to implement")
 						}else{ // root
 							//save images
 							let images=Array.from(document.getElementsByTagName('img'))
@@ -233,7 +233,7 @@
 							URL.revokeObjectURL(url); //Releases the resources
 							oldFrame=url
 						}else{ // root
-							throw "need to implement"
+							throw  new Error("need to implement")
 						}	
 					break;
 					case 'data':
