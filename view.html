@@ -219,6 +219,10 @@
 			displayMedium='iframe' // iframe or root
 			if(displayMedium=='iframe'){
 				iframe=iframes[iframe_index++]
+				if(!iframe){
+					iframe_index=0
+					iframe=iframes[iframe_index]
+				}
 			}
 			data=package.data||package;
 			switch(forceDisplay||data.display) {
