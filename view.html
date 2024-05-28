@@ -64,7 +64,7 @@
 		let div = document.getElementById('viewport_div')
 		var iframes = div.getElementsByTagName("iframe");
 		let iframe = null
-		let iframe_index=-1
+		let iframe_index=0
                 var lastPeerId = null;
                 var peer = null; // Own peer object
                 var peerId = null;
@@ -218,7 +218,7 @@
 			forceDisplay='html'
 			displayMedium='iframe' // iframe or root
 			if(displayMedium=='iframe'){
-				iframe=iframes[++iframe_index]
+				iframe=iframes[iframe_index++]
 				if(!iframe){
 					iframe_index=0
 					iframe=iframes[iframe_index]
