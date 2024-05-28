@@ -1215,7 +1215,7 @@ font-size: 2.5em;
 				
 				html=document.documentElement.outerHTML || document.documentElement.innerHTML
 				if(oldFrame == html){
-					package = {type:'alive'}
+					let package = {type:'alive'}
 					console.log('sending keep alive pakage',pakage)
 					connection.send(pakage)
 					return
@@ -1290,6 +1290,7 @@ font-size: 2.5em;
 		    
 
 		if(location.pathname=='/kqDraft/'){
+			alert('starting')
 			initialize();
 		}
             })();
