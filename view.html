@@ -277,6 +277,24 @@
 						oldFrame=html
 					}
 				break;
+				case 'xhtml': //https://stackoverflow.com/questions/48772331/open-xml-in-new-window-with-javascript
+					let xhtml=data.xhtml.replace('./kqDraft.js','');
+					if(oldFrame==xhtml){ //if display medium changes during runtime this will have lingering artifacts
+						return
+					}
+					if(displayMedium == 'iframe'){
+						let blob = new Blob([xhtml], {type: 'text/xml'});
+						let url = URL.createObjectURL(blob);
+						iframe.style.width=data.viewport.width+'px'
+						//iframe.style.height=data.viewport.height+'px'
+						iframe.src=url; 
+						//DEVNOTE: TODO dont use datauri write diretctly to the iframe
+						URL.revokeObjectURL(url); //Releases the resources
+						oldFrame=url
+					}else{ // root
+						throw  new Error("need to implement")
+					}	
+				break;
 				case 'data':
 					//this will be custom code in the future
 					log('Received data: ', data);
