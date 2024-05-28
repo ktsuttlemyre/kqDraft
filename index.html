@@ -1216,7 +1216,7 @@ font-size: 2.5em;
 				html=document.documentElement.outerHTML || document.documentElement.innerHTML
 				if(oldFrame == html){
 					let package = {type:'alive'}
-					console.log('sending keep alive pakage',pakage)
+					console.log('sending keep alive pakage',package)
 					connection.send(pakage)
 					return
 				}
