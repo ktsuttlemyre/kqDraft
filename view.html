@@ -63,7 +63,7 @@
             (function () {
 		let div = document.getElementById('viewport_div')
 		var iframes = div.getElementsByTagName("iframe");
-		let iframe = iframes[0]
+		let iframe = null
 		let iframe_index=-1
                 var lastPeerId = null;
                 var peer = null; // Own peer object
@@ -263,8 +263,6 @@
 							idoc.document.close();
 						}
 						iframe.style.visibility='visible'
-						let oldIndex=iframe_index-1
-						setTimeout(function(){iframes[oldIndex].style.visibility='hidden'},1)
 						oldFrame=html
 					}else{ // root
 						let newDoc = document.open("text/html", "replace");
@@ -298,6 +296,10 @@
 				default:
 					log('Received data: ', data);
 				}
+			if(displayMedium=='iframe'){
+				let oldIndex=iframe_index-1
+				setTimeout(function(){iframes[oldIndex].style.visibility='hidden'},1)
+			}
 		}
                 initialize();
             })();
