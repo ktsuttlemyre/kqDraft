@@ -64,7 +64,7 @@
 		let div = document.getElementById('viewport_div')
 		var iframes = div.getElementsByTagName("iframe");
 		let iframe = null
-		let iframe_index=0
+		let iframe_index=iframes.length-1
                 var lastPeerId = null;
                 var peer = null; // Own peer object
                 var peerId = null;
@@ -215,11 +215,10 @@
                 };
 		var oldFrame=''
 		let drawFrame=function(package){
-			var iframe_old_index=null
+			var iframe_old_index=iframe_index
 			forceDisplay='html'
 			displayMedium='iframe' // iframe or root
 			if(displayMedium=='iframe'){
-				iframe_old_index=iframe_index
 				iframe=iframes[iframe_index++]
 				if(!iframe){
 					iframe_index=0
