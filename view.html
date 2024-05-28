@@ -217,12 +217,12 @@
 						return
 					}
 					if(displayMedium == 'iframe'){
-						var dataURI = 'data:text/html,' + encodeURIComponent(html);
 						iframe.style.width=data.viewport.width+'px'
-						//iframe.style.height=data.viewport.height+'px'
-						iframe.src=dataURI
-						oldFrame=dataURI
-						//DEVNOTE: TODO dont use datauri write diretctly to the iframe
+						idoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
+						idoc.document.open();
+						idoc.document.write(html);
+						idoc.document.close();
+						oldFrame=html
 					}else{ // root
 						let newDoc = document.open("text/html", "replace");
 						newDoc.write(html);
