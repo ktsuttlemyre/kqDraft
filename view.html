@@ -221,8 +221,9 @@
 			if(displayMedium=='iframe'){
 				iframe=iframes[++iframe_index]
 				if(!iframe){
-					iframe_old_index = iframe_index = iframes.length-1
-					iframe=iframes[++iframe_index]
+					iframe_old_index = iframes.length-1
+					iframe_index = 0
+					iframe=iframes[iframe_index++]
 				}
 			}
 			data=package.data||package;
