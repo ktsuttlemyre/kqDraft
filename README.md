@@ -2,7 +2,11 @@
 
 A webapp made to help organize Killer Queen arcade league nights
 
-See the working [webapp here](http://kqdraft.tildestar.com)
+### Demo:
+https://ktsuttlemyre.github.io/kqDraft/
+
+### Viewer
+https://ktsuttlemyre.github.io/kqDraft/view.html
 
 #Getting Started
 Run the following commands in terminal
@@ -11,9 +15,8 @@ Run the following commands in terminal
 2. run the server `python server.py`
 3. open web browser to [http://127.0.0.1:8080](http://127.0.0.1:8080) or [http://localhost:8080](http://localhost:8080)
 
+Old Site
+ [webapp here](http://kqdraft.tildestar.com)
 
 
-New site https://ktsuttlemyre.github.io/kqDraft/
 
-Viewer can be found here
-https://ktsuttlemyre.github.io/kqDraft/view.html
