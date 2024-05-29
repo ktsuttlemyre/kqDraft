@@ -15,17 +15,15 @@ jobs:
   Deploy-to-Surge:
     name: Deploy to surge.sh
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
-    env:
-        CNAME: kqdraft.tildestar.com
-        SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-        SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '14'
       - run: |
-          export SURGE_LOGIN
-          export SURGE_TOKEN
           npm install --global surge
           surge . watermelontest.surge.sh #$ENVIRONMENT-$CNAME
+        env:
+          CNAME: kqdraft.tildestar.com
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
