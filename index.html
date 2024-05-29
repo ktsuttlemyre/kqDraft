@@ -1177,8 +1177,11 @@ font-size: 2.5em;
 			}else{
 				sessionID=location.hash.replace(/^#/, '')
 			}
-			let today=(new Date()).toLocaleString("en-US", {
-			  timeZone: "America/Los_Angeles"
+			
+			let today=new Date();
+			today.setHours(today.getHours() + 5) //offset the day so people can use it past midnight
+			today=today.toLocaleString("en-US", {
+				timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
 			}).replaceAll('/','-').split(',')[0]
                     peerjs = new Peer(`6f06212e-614c-4ce0-${today}-${sessionID}`, {
                         debug: 2
