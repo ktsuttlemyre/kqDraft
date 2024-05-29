@@ -107,7 +107,10 @@
 			}else{
 				sessionID=location.hash.replace(/^#/, '')
 			}
-			join('6f06212e-614c-4ce0-86b2-'+sessionID)
+			let today=(new Date()).toLocaleString("en-US", {
+			  timeZone: "America/Los_Angeles"
+			}).replaceAll('/','-').split(',')[0]
+                    	join(`6f06212e-614c-4ce0-${today}-${sessionID}`)
                     });
 
 
