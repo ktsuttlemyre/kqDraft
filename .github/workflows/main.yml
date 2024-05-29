@@ -9,9 +9,11 @@ on:
   
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-  ENVIRONMENT: ktsuttle-dev
-  CNAME: watermelontest.surge.sh
+  # create a place to store your env.vars and secret.vars via https://github.com/ktsuttlemyre/kqDraft/settings/environments
+  GH_ENVIRONMENT: ktsuttle-dev
+  # Set it to the email address you use with Surge
   SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+  # SURGE_TOKEN: Set it to your login token (get it by doing a surge token)
   SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
   
 jobs:
@@ -19,8 +21,8 @@ jobs:
     name: Deploy
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     environment: 
-      name: ${ENVIRONMENT}
-      url: ${CNAME}
+      name: ${GH_ENVIRONMENT}
+      url: ${env.CNAME}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,4 +31,4 @@ jobs:
       - run: |
           if [[ -z "${SURGE_LOGIN}" ]] || [[ -z "${SURGE_TOKEN}" ]]; then echo "Make sure SURGE_TOKEN and SURGE_LOGIN are set" ; exit 1; fi
           npm install --global surge
-          surge . $CNAME
+          surge . ${{ env.CNAME }}
