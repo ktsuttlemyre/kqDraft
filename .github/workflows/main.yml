@@ -26,4 +26,4 @@ jobs:
           node-version: '14'
       - run: |
           npm install --global surge
-          surge . $ENVIRONMENT-$CNAME
+          env surge . $ENVIRONMENT-$CNAME
