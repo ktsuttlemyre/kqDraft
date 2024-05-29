@@ -18,9 +18,6 @@ jobs:
   Deploy-to-Surge:
     name: Deploy
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
-    environment: 
-      name: ktsuttle-dev
-      url: ${CNAME}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
