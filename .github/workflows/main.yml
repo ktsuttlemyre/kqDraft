@@ -19,6 +19,8 @@ env:
 jobs:
   Deploy-to-Surge:
     name: Deploy
+    # The below code fixes the github queue. I dont know why
+    # https://stackoverflow.com/a/75072792
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     environment: 
       name: ${GH_ENVIRONMENT}
@@ -29,6 +31,9 @@ jobs:
         with:
           node-version: '14'
       - run: |
-          if [[ -z "${SURGE_LOGIN}" ]] || [[ -z "${SURGE_TOKEN}" ]]; then echo "Make sure SURGE_TOKEN and SURGE_LOGIN are set" ; exit 1; fi
+          if [[ -z "${SURGE_LOGIN}" ]] || [[ -z "${SURGE_TOKEN}" ]]; then
+            echo "Make sure SURGE_TOKEN and SURGE_LOGIN are set"
+            exit 1
+          fi
           npm install --global surge
           surge . ${{ env.CNAME }}
