@@ -108,7 +108,7 @@
 				sessionID=location.hash.replace(/^#/, '')
 			}
 			let today=new Date();
-			today.setHours(today.getHours() + 5) //offset the day so people can use it past midnight
+			today.setHours(today.getHours() - 5) //offset the day so people can use it past midnight
 			today=today.toLocaleString("en-US", {
 				timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
 			}).replaceAll('/','-').split(',')[0]
