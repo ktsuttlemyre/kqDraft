@@ -1303,7 +1303,9 @@ font-size: 2.5em;
 
 		if(location.pathname=='/kqDraft/'){
 			if(!location.hash){
-				location.hash=prompt('give this session a name')
+				while(!location.hash){
+					location.hash=prompt('Give this session a name') ||''
+				}
 			}
 			initialize();
 		}
