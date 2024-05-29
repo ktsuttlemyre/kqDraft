@@ -25,5 +25,7 @@ jobs:
         with:
           node-version: '14'
       - run: |
+          export SURGE_LOGIN
+          export SURGE_TOKEN
           npm install --global surge
-          env surge . watermelontest.surge.sh #$ENVIRONMENT-$CNAME
+          surge . watermelontest.surge.sh #$ENVIRONMENT-$CNAME
