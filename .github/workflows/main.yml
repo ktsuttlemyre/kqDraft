@@ -23,7 +23,7 @@ jobs:
     # create a place to store your env.vars and secret.vars via https://github.com/ktsuttlemyre/kqDraft/settings/environments
     environment: 
       name: ktsuttle-dev
-      url: ${{ vars.CNAME }}
+      url: https://${{ vars.CNAME }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
