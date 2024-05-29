@@ -1171,7 +1171,13 @@ font-size: 2.5em;
 
                 function initialize() {
                     // Create own peer object with connection to shared PeerJS server
-                    peerjs = new Peer('6f06212e-614c-4ce0-86b2-'+location.hash, {
+			let sessionID=null
+			if(location.hash.match(/^#!/i)){
+				throw new Error('location hash is a map and needs an api')
+			}else{
+				sessionID=location.hash.replace(/^#/, '')
+			}
+                    peerjs = new Peer('6f06212e-614c-4ce0-86b2-'+sessionID, {
                         debug: 2
                     });
 
