@@ -14,3 +14,6 @@ Run the following commands in terminal
 
 
 New site https://ktsuttlemyre.github.io/kqDraft/
+
+Viewer can be found here
+https://ktsuttlemyre.github.io/kqDraft/view.html
