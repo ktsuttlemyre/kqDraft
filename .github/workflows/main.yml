@@ -1,0 +1,29 @@
+#original https://www.programonaut.com/how-to-deploy-a-git-repository-to-a-server-using-github-actions/
+name: Deploy to surge.sh
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+  workflow_dispatch:
+  
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+  ENVIRONMENT: dev
+  
+jobs:
+  Deploy-to-Surge:
+    name: Deploy to surge.sh
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    env:
+        CNAME: kqdraft.tildestar.com
+        SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+        SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+      - run: |
+          npm install --global surge
+          surge . $ENVIRONMENT-$CNAME
