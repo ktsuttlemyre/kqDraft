@@ -31,7 +31,7 @@ jobs:
           node-version: '14'
       - run: |
           echo "SURGE_LOGIN length: ${#SURGE_LOGIN}"
-          echo "CNAME: ${vars.CNAME}"
+          echo "CNAME: ${{ vars.CNAME }}"
           if [[ -z "$SURGE_LOGIN" ]] || [[ -z "$SURGE_TOKEN" ]]; then
             echo "Make sure SURGE_TOKEN and SURGE_LOGIN are set"
             exit 1
