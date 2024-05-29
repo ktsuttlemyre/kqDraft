@@ -10,7 +10,7 @@ on:
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
   # create a place to store your env.vars and secret.vars via https://github.com/ktsuttlemyre/kqDraft/settings/environments
-  GH_ENVIRONMENT: ktsuttle-dev
+  ENVIRONMENT: ktsuttle-dev
   # Set it to the email address you use with Surge
   SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
   # SURGE_TOKEN: Set it to your login token (get it by doing a surge token)
@@ -23,7 +23,7 @@ jobs:
     # https://stackoverflow.com/a/75072792
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     environment: 
-      name: ${GH_ENVIRONMENT}
+      name: ${ENVIRONMENT}
       url: ${env.CNAME}
     steps:
       - uses: actions/checkout@v4
