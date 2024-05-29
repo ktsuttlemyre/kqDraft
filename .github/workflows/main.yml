@@ -9,8 +9,6 @@ on:
   
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-  # create a place to store your env.vars and secret.vars via https://github.com/ktsuttlemyre/kqDraft/settings/environments
-  ENVIRONMENT: ktsuttle-dev
   # Set it to the email address you use with Surge
   SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
   # SURGE_TOKEN: Set it to your login token (get it by doing a surge token)
@@ -22,9 +20,10 @@ jobs:
     # The below code fixes the github queue. I dont know why
     # https://stackoverflow.com/a/75072792
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    # create a place to store your env.vars and secret.vars via https://github.com/ktsuttlemyre/kqDraft/settings/environments
     environment: 
-      name: ${ ENVIRONMENT }
-      url: ${ env.CNAME }
+      name: ktsuttle-dev
+      url: ${{ env.CNAME }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
