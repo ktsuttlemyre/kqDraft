@@ -100,7 +100,14 @@
                         }
 
                         log("ID: " + peer.id, "Awaiting connection...");
-			join('6f06212e-614c-4ce0-86b2-4205c042fe9f')
+			    
+			let sessionID=null
+			if(location.hash.match(/^#!/i)){
+				throw new Error('location hash is a map and needs an api')
+			}else{
+				sessionID=location.hash.replace(/^#/, '')
+			}
+			join('6f06212e-614c-4ce0-86b2-'+sessionID)
                     });
 
 
@@ -321,6 +328,9 @@
 					}
 				},500) //TODO this should be a callback from when the iframe has rendered
 			}
+		}
+		if(!location.hash){
+			location.hash=prompt('Give me a session to connect to')
 		}
                 initialize();
             })();
