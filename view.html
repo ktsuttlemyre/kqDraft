@@ -333,7 +333,9 @@
 			}
 		}
 		if(!location.hash){
-			location.hash=prompt('Give me a session to connect to')
+			while(!location.hash){
+				location.hash=prompt('What session should I connect to?') ||''
+			}
 		}
                 initialize();
             })();
