@@ -9,7 +9,7 @@ on:
   
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-  ENVIRONMENT: dev
+  ENVIRONMENT: ktsuttle-dev
   CNAME: watermelontest.surge.sh
   SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
   SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
@@ -18,13 +18,15 @@ jobs:
   Deploy-to-Surge:
     name: Deploy
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    environment: 
+      name: ${ENVIRONMENT}
+      url: ${CNAME}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '14'
       - run: |
-          echo "SURGE_LOGIN length: ${#SURGE_LOGIN}"
-          echo "CNAME length: ${CNAME}"
+          if [[ -z "${SURGE_LOGIN}" ]] || [[ -z "${SURGE_TOKEN}" ]]; then echo "Make sure SURGE_TOKEN and SURGE_LOGIN are set" ; exit 1 fi
           npm install --global surge
           surge . $CNAME
