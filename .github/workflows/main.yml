@@ -23,7 +23,7 @@ jobs:
     # create a place to store your env.vars and secret.vars via https://github.com/ktsuttlemyre/kqDraft/settings/environments
     environment: 
       name: ktsuttle-dev
-      url: ${{ env.CNAME }}
+      url: ${{ vars.CNAME }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,4 +37,4 @@ jobs:
             exit 1
           fi
           npm install --global surge
-          surge . ${{ env.CNAME }}
+          surge . ${{ vars.CNAME }}
